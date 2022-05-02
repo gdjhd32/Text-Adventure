@@ -8,10 +8,12 @@ public class Main {
 		new Main();
 	}
 	
+	private String[] VALID_KEYS = { "w", "a", "s", "d"};
+	
 	private Render render;
 	
 	public Main() {
-		render = new Render(this);
+		render = new Render(this, VALID_KEYS);
 		render.println("Welcome to our small game!");
 		render.println("\n");
 	}

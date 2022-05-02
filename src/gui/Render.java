@@ -15,14 +15,16 @@ import main.Main;
 @SuppressWarnings("serial")
 public class Render extends JFrame {
 
-	private String[] VALID_KEYS = { "w", "a", "s", "d" };
-	private boolean[] isPressed = new boolean[VALID_KEYS.length];
+	private String[] VALID_KEYS;
+	private boolean[] isPressed;
 
 	private TextArea output;
 	private Main parent;
 
-	public Render(Main parent) {
+	public Render(Main parent, String[] validKeys) {
 		super("Text-Adventure");
+		VALID_KEYS = validKeys;
+		isPressed = new boolean[VALID_KEYS.length];
 		this.parent = parent;
 		initWindow();
 	}
