@@ -8,7 +8,10 @@ public class Main {
 		new Main();
 	}
 	
-	private String[] VALID_KEYS = { "w", "a", "s", "d"};
+	private long prior = 0;
+	private long current = System.currentTimeMillis();
+	
+	private String[] VALID_KEYS = { "w", "a", "s", "d", "wq"};
 	
 	private Render render;
 	
@@ -19,7 +22,9 @@ public class Main {
 	}
 	
 	public void keyPressed(String key) {
-		render.changeLast(key);
+		current = System.currentTimeMillis();
+		render.println(key);
+		prior = current;
 	}
 
 }
