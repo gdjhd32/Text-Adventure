@@ -9,6 +9,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import main.Main;
 
@@ -19,6 +20,7 @@ public class Render extends JFrame {
 	private final boolean[] isPressed;
 
 	private TextArea output;
+	private JPanel backgroundLeft, backgroundRight;
 	private final Main PARENT;
 
 	public Render(Main parent, String[] validKeys) {
@@ -60,19 +62,29 @@ public class Render extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				for (int i = 0; i < VALID_KEYS.length; i++)
-					if (VALID_KEYS[i].contains(e.getKeyChar() + "")) {
+					if (VALID_KEYS[i].contains(e.getKeyChar() + "") && !isPressed[i]) {
 						isPressed[i] = true;
 						PARENT.keyPressed(e.getKeyChar() + "");
 					}
 			}
 		});
 
-		setBounds(100, 100, 270, 600);
+		setBounds(100, 100, 540, 600);
 		setResizable(false);
 		setVisible(true);
 
+		backgroundLeft = new JPanel();
+		backgroundLeft.setBackground(new Color(5, 5, 5));
+		backgroundLeft.setBounds(0, 0, 137, getHeight());
+		add(backgroundLeft);
+		
+		backgroundRight = new JPanel();
+		backgroundRight.setBackground(new Color(5, 5, 5));
+		backgroundRight.setBounds(386, 0, 138, getHeight());
+		add(backgroundRight);
+		
 		output = new TextArea();
-		output.setBounds(-2, -1, getWidth() - 12, getHeight() - 19);
+		output.setBounds(135, -2, 270, getHeight() - 18);
 		output.setBackground(new Color(0, 0, 0));
 		output.setForeground(new Color(0, 255, 0));
 		output.setFont(new Font("Times New Roman", Font.ROMAN_BASELINE, 12));
