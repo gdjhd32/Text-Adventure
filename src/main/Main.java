@@ -1,8 +1,12 @@
 package main;
 
+import fighting.Armor;
+import fighting.Armor.ArmorType;
+import fighting.CombytSystem;
 import fighting.Fighter;
 import fighting.Fighter.Direction;
-import fighting.FightingField;
+import fighting.Weapon;
+import fighting.Weapon.WeaponType;
 import gui.Render;
 
 public class Main {
@@ -15,16 +19,23 @@ public class Main {
 
 	private final Render render;
 	private Fighter player, enemy;
-	private FightingField fightingField;
+	private CombytSystem fightingField;
 
 	public Main() {
+		player = new Fighter("X", 1, 1, 1);
+		player.setWeapon(new Weapon("Wooden Sword", 1, WeaponType.Broadsword));
+		player.setArmor(new Armor("Leather Armor", 1, ArmorType.Leather));
+		
+		enemy = new Fighter("Skeleton Soldier", 1, 1, 1);
+		enemy.setWeapon(new Weapon("Bone Sword", 2, WeaponType.Broadsword));
+		enemy.setArmor(new Armor("Iron Armor", 2, ArmorType.Iron));
+		
+		fightingField = new CombytSystem(this, player, enemy);
+		
 		render = new Render(this, VALID_KEYS);
-		initGame();
-	}
-
-	private void initGame() {
-		player = new Fighter("X", 0, 1, 0);
-		fightingField = new FightingField(this, player, enemy);
+		render.refreshChangeableLabel();
+		render.refreshWeaponLabel();
+		render.refreshArmorLabel();
 		render.println("Welcome to our small game!");
 	}
 
@@ -49,6 +60,14 @@ public class Main {
 
 	public void println(String arg) {
 		render.println(arg);
+	}
+
+	public Fighter getPlayer() {
+		return player;
+	}
+
+	public Fighter getEnemy() {
+		return enemy;
 	}
 
 }

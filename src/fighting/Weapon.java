@@ -7,7 +7,7 @@ public class Weapon {
 	public final WeaponType TYPE;
 
 	public static enum WeaponType {
-		Broadsword, Spear, Shortsword, Shield
+		Broadsword, Spear, Shortsword_Shield
 	}
 
 	public Weapon(String name, int atk, WeaponType type) {

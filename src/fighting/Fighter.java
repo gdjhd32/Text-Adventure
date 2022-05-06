@@ -1,105 +1,80 @@
 package fighting;
 
-import fighting.Weapon.WeaponType;
-
 public class Fighter {
 
-	private Weapon leftHand;
-	private Weapon rightHand;
+	private Weapon weapon;
 	private Armor armor;
 
-	private int init; // initiative
-	private int hp; // health points
+	private int ag; // agility
+	private int maxHp; // health points
+	private int currentHp;
 	private int str; // strength
-	
+	private int atk = 0; // attack
+	private int maxDef = 0; // defense
+	private int currentDef = maxDef;
+
 	public final String NAME;
-	
+
 	private Position position;
-	
+
 	public static enum Position {
 		LeftUp, MiddleUp, RightUp, LeftCenter, MiddleCenter, RightCenter, LeftDown, MiddleDown, RightDown
 	}
-	
+
 	public static enum Direction {
 		Up, Down, Left, Right
 	}
 
-	public Fighter(String name, int str, int hp, int init) {
+	public Fighter(String name, int str, int maxHp, int ag) {
 		NAME = name;
-		this.setStr(str);
-		this.setHp(hp);
-		this.setInit(init);
+		this.str = str;
+		this.maxHp = maxHp;
+		currentHp = maxHp;
+		this.ag = ag;
 		setPosition(Position.MiddleCenter);
 	}
 
-	public void setLeftHand(Weapon w) {
-		if (leftHand == rightHand) {
-			if (w.TYPE != WeaponType.Broadsword) {
-				leftHand = w;
-				rightHand = null;
-				return;
-			}
-			leftHand = w;
-			rightHand = w;
-			return;
-		}
-		if (w.TYPE != WeaponType.Broadsword) {
-			leftHand = w;
-			return;
-		}
-		leftHand = w;
-		rightHand = w;
+	public Weapon getWeapon() {
+		return weapon;
 	}
 
-	public void setRightHand(Weapon w) {
-		if (leftHand == rightHand) {
-			if (w.TYPE != WeaponType.Broadsword) {
-				rightHand = w;
-				leftHand = null;
-				return;
-			}
-			rightHand = w;
-			leftHand = w;
-			return;
-		}
-		if (w.TYPE != WeaponType.Broadsword) {
-			rightHand = w;
-			return;
-		}
-		rightHand = w;
-		leftHand = w;
-	}
-
-	public void setArmor(Armor a) {
-		armor = a;
-	}
-
-	public Weapon leftHand() {
-		return leftHand;
-	}
-
-	public Weapon getRightHand() {
-		return rightHand;
+	public void setWeapon(Weapon w) {
+		weapon = w;
+		setAtk(weapon.ATK);
 	}
 
 	public Armor getArmor() {
 		return armor;
 	}
 
-	public int getHp() {
-		return hp;
+	public void setArmor(Armor a) {
+		armor = a;
+		maxDef = armor.DEF;
+		currentDef = maxDef;
 	}
 
-	public void setHp(int hp) {
-		this.hp = hp;
+	public int getMaxHp() {
+		return maxHp;
 	}
 
-	public int getInit() {
-		return init;
+	public void setMaxHp(int hp) {
+		this.maxHp = hp;
 	}
 
-	public void setInit(int init) {
-		this.init = init;
+	public int getCurrentHp() {
+		return currentHp;
+	}
+
+	public void setCurrentHp(int hp) {
+		this.currentHp = hp;
+	}
+
+	public int getAg() {
+		return ag;
+	}
+
+	public void setAg(int ag) {
+		this.ag = ag;
 	}
 
 	public int getStr() {
@@ -116,6 +91,26 @@ public class Fighter {
 
 	public void setPosition(Position position) {
 		this.position = position;
+	}
+
+	public int getMaxDef() {
+		return maxDef;
+	}
+	
+	public int getCurrentDef() {
+		return currentDef;
+	}
+
+	public void setCurrentDef(int def) {
+		this.currentDef = def;
+	}
+
+	public int getAtk() {
+		return atk;
+	}
+
+	public void setAtk(int atk) {
+		this.atk = atk;
 	}
 
 }
