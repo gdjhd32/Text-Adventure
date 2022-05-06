@@ -2,7 +2,7 @@ package main;
 
 import fighting.Armor;
 import fighting.Armor.ArmorType;
-import fighting.CombytSystem;
+import fighting.CombatSystem;
 import fighting.Fighter;
 import fighting.Fighter.Direction;
 import fighting.Weapon;
@@ -19,7 +19,7 @@ public class Main {
 
 	private final Render render;
 	private Fighter player, enemy;
-	private CombytSystem fightingField;
+	private CombatSystem fightingField;
 
 	public Main() {
 		player = new Fighter("X", 1, 1, 1);
@@ -30,7 +30,7 @@ public class Main {
 		enemy.setWeapon(new Weapon("Bone Sword", 2, WeaponType.Broadsword));
 		enemy.setArmor(new Armor("Iron Armor", 2, ArmorType.Iron));
 		
-		fightingField = new CombytSystem(this, player, enemy);
+		fightingField = new CombatSystem(this, player, enemy);
 		
 		render = new Render(this, VALID_KEYS);
 		render.refreshChangeableLabel();

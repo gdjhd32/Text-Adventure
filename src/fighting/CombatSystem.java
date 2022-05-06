@@ -4,13 +4,13 @@ import fighting.Fighter.Direction;
 import fighting.Fighter.Position;
 import main.Main;
 
-public class CombytSystem {
+public class CombatSystem {
 
 	private final Fighter PLAYER;
 	private final Fighter ENEMY;
 	private final Main PARENT;
 
-	public CombytSystem(Main parent, Fighter player, Fighter enemy) {
+	public CombatSystem(Main parent, Fighter player, Fighter enemy) {
 		PLAYER = player;
 		ENEMY = enemy;
 		PARENT = parent;
