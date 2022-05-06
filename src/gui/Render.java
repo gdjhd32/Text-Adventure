@@ -3,7 +3,6 @@ package gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.TextArea;
-import java.awt.desktop.ScreenSleepEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -16,21 +15,18 @@ import main.Main;
 @SuppressWarnings("serial")
 public class Render extends JFrame {
 
-	private String[] VALID_KEYS;
-	private boolean[] isPressed;
+	private final String[] VALID_KEYS;
+	private final boolean[] isPressed;
 
 	private TextArea output;
-	private Main parent;
-
-	private KeyThread keyThread;
+	private final Main PARENT;
 
 	public Render(Main parent, String[] validKeys) {
 		super("Text-Adventure");
 		VALID_KEYS = validKeys;
 		isPressed = new boolean[VALID_KEYS.length];
-		this.parent = parent;
+		PARENT = parent;
 		initWindow();
-		keyThread = new KeyThread(validKeys);
 	}
 
 	private void initWindow() {
@@ -64,12 +60,10 @@ public class Render extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				for (int i = 0; i < VALID_KEYS.length; i++)
-					if (VALID_KEYS[i].contains(e.getKeyChar() + "") && !isPressed[i]) {
-						parent.keyPressed(keyThread.controll(e.getKeyChar() + ""));
+					if (VALID_KEYS[i].contains(e.getKeyChar() + "")) {
 						isPressed[i] = true;
-						return;
+						PARENT.keyPressed(e.getKeyChar() + "");
 					}
-
 			}
 		});
 
@@ -106,70 +100,6 @@ public class Render extends JFrame {
 			return;
 		}
 		output.replaceRange(" " + arg, output.getText().length() - lastSectionLength, output.getText().length());
-	}
-
-	private class KeyThread {
-
-		private String[] validKeys;
-		private String lastKey;
-		private WaitingThread wThread;
-		boolean keyCombination;
-
-		public KeyThread(String[] validKeys) {
-			super();
-			this.validKeys = validKeys;
-			keyCombination = true;
-		}
-
-		public String controll(String key) {
-			if (lastKey != null && keyCombination) {
-				for (int i = 0; i < validKeys.length; i++) {
-					if (validKeys[i].contains(lastKey) && validKeys[i].contains(key)) {
-						lastKey = key;
-						keyCombination = true;
-						wThread = new WaitingThread(50, this);
-						wThread.start();
-						return validKeys[i];
-					}
-				}
-				return "";
-			}
-			lastKey = key;
-			keyCombination = true;
-			wThread = new WaitingThread(100, this);
-			wThread.start();
-			
-			for (int i = 0; i < validKeys.length; i++)
-				if (validKeys[i].equals(lastKey))
-					return lastKey;
-			return "";
-		}
-
-		private class WaitingThread extends Thread {
-
-			private int waitingTime;
-			private KeyThread parent;
-
-			public WaitingThread(int time, KeyThread parent) {
-				waitingTime = time;
-				this.parent = parent;
-			}
-
-			public void sleep() {
-				try {
-					Thread.sleep(waitingTime);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				parent.keyCombination = false;
-			}
-			
-			@Override
-			public void run() {
-				sleep();
-			}
-		}
-
 	}
 
 }
