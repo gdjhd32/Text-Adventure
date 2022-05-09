@@ -61,7 +61,7 @@ public class Render extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				for (int i = 0; i < VALID_KEYS.length; i++)
-					if (VALID_KEYS[i].contains(e.getKeyChar() + "") && !isPressed[i]) {
+					if (VALID_KEYS[i].equals(e.getKeyChar() + "") && !isPressed[i]) {
 						isPressed[i] = true;
 						PARENT.keyPressed(e.getKeyChar() + "");
 					}
