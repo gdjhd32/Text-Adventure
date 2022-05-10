@@ -30,13 +30,13 @@ public class Main {
 		enemy.setWeapon(new Weapon("Bone Sword", 2, WeaponType.Broadsword));
 		enemy.setArmor(new Armor("Iron Armor", 2, ArmorType.Iron));
 		
-		fightingField = new CombatSystem(this, player, enemy);
-		
 		render = new Render(this, VALID_KEYS);
 		render.refreshChangeableLabel();
 		render.refreshWeaponLabel();
 		render.refreshArmorLabel();
 		render.println("Welcome to our small game!");
+		
+		fightingField = new CombatSystem(render, player, enemy);
 	}
 
 	public void keyPressed(String key) {
@@ -56,10 +56,6 @@ public class Main {
 		default:
 			return;
 		}
-	}
-
-	public void println(String arg) {
-		render.println(arg);
 	}
 
 	public Fighter getPlayer() {

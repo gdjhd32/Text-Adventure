@@ -2,19 +2,22 @@ package fighting;
 
 import fighting.Fighter.Direction;
 import fighting.Fighter.Position;
+import gui.Render;
 import main.Main;
 
 public class CombatSystem {
 
 	private final Fighter PLAYER;
 	private final Fighter ENEMY;
-	private final Main PARENT;
+	private final Render RENDER;
 
-	public CombatSystem(Main parent, Fighter player, Fighter enemy) {
+	public CombatSystem(Render render, Fighter player, Fighter enemy) {
 		PLAYER = player;
 		ENEMY = enemy;
-		PARENT = parent;
+		RENDER = render;
 	}
+	
+	
 
 	public void movePlayer(Direction dir) {
 		if (dir == Direction.Up) {
@@ -38,10 +41,10 @@ public class CombatSystem {
 				PLAYER.setPosition(Position.RightCenter);
 				break;
 			default:
-				PARENT.println("You did not move!");
+				RENDER.println("You did not move!");
 				return;
 			}
-			PARENT.println("You moved to " + PLAYER.getPosition().name() + "!");
+			RENDER.println("You moved to " + PLAYER.getPosition().name() + "!");
 			return;
 		}
 		if (dir == Direction.Down) {
@@ -65,10 +68,10 @@ public class CombatSystem {
 				PLAYER.setPosition(Position.RightDown);
 				break;
 			default:
-				PARENT.println("You did not move!");
+				RENDER.println("You did not move!");
 				return;
 			}
-			PARENT.println("You moved to " + PLAYER.getPosition().name() + "!");
+			RENDER.println("You moved to " + PLAYER.getPosition().name() + "!");
 			return;
 		}
 		if (dir == Direction.Left) {
@@ -92,10 +95,10 @@ public class CombatSystem {
 				PLAYER.setPosition(Position.MiddleDown);
 				break;
 			default:
-				PARENT.println("You did not move!");
+				RENDER.println("You did not move!");
 				return;
 			}
-			PARENT.println("You moved to " + PLAYER.getPosition().name() + "!");
+			RENDER.println("You moved to " + PLAYER.getPosition().name() + "!");
 			return;
 		}
 		if (dir == Direction.Right) {
@@ -119,12 +122,14 @@ public class CombatSystem {
 				PLAYER.setPosition(Position.RightDown);
 				break;
 			default:
-				PARENT.println("You did not move!");
+				RENDER.println("You did not move!");
 				return;
 			}
-			PARENT.println("You moved to " + PLAYER.getPosition().name() + "!");
+			RENDER.println("You moved to " + PLAYER.getPosition().name() + "!");
 			return;
 		}
 	}
+	
+	
 
 }

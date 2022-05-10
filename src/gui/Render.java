@@ -68,7 +68,7 @@ public class Render extends JFrame {
 			}
 		});
 
-		setBounds(100, 100, 660, 300);
+		setBounds(100, 100, 660, 600);
 		setResizable(false);
 		setVisible(true);
 
@@ -128,6 +128,7 @@ public class Render extends JFrame {
 		backgroundLeft = new Panel();
 		backgroundLeft.setBackground(new Color(5, 5, 5));
 		backgroundLeft.setBounds(0, 0, leftSideSize + 2, getHeight());
+		backgroundLeft.setFocusable(false);
 		add(backgroundLeft);
 
 		enemyName = new Label(PARENT.getEnemy().NAME);
@@ -182,6 +183,7 @@ public class Render extends JFrame {
 		backgroundRight = new Panel();
 		backgroundRight.setBackground(new Color(5, 5, 5));
 		backgroundRight.setBounds(leftSideSize + textAreaWidth - 26, 0, rightSideSize, getHeight());
+		backgroundRight.setFocusable(false);
 		add(backgroundRight);
 
 		output = new TextArea("", 0, 0, TextArea.SCROLLBARS_VERTICAL_ONLY);
