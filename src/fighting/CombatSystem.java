@@ -16,7 +16,7 @@ public class CombatSystem {
 		ENEMY = enemy;
 		RENDER = render;
 		
-		new CombatAutomat();
+		new CombatAutomat(player, enemy);
 	}
 	
 	

@@ -6,6 +6,7 @@ public class Weapon {
 	public final String NAME;
 	public final WeaponType TYPE;
 
+	//instead of Broadsword maybe Longsword?
 	public static enum WeaponType {
 		Broadsword, Spear, Shortsword_Shield
 	}

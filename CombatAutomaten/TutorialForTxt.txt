@@ -1,0 +1,21 @@
+// Separate sections in on line with ;
+// First valid line in text file is ALWAYS damage multiplier
+// First ALWAYS the name of the CombatSituation
+// Last ALWAYS the description
+// P: player, E: enemy
+// ETHER the player OR the enemy can take damage in one CombatSituation
+// DMG: damage
+// general multiplier at the start of the text file, e.g. hand hit
+// time window, next state, 
+hand 0.5;
+PDMG hand;
+//damage to the player, base damage multiplied with strength of enemy, protection of player and the damage multiplier of hand
+//
+// To write down informations for the keys:
+PJ 2 P_Hitting_To_The_Head;
+// player/enemy+key timeToPress nameOFNext
+// timeToPress: 0 = infinite
+//Every letter has to be written in caps
+// _: automatic, _ 0: instant
+_ 0 Initial_Position;
+//Straight to the initial position
