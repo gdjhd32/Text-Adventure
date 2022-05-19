@@ -9,13 +9,16 @@
 // time window, next state, 
 hand 0.5;
 PDMG hand;
-//damage to the player, base damage multiplied with strength of enemy, protection of player and the damage multiplier of hand
-//
+// damage to the player, base damage multiplied with strength of enemy, protection of player and the damage multiplier of hand
+// When there are multiple damage multiplier, they are just multiplied all with the damage
 // To write down informations for the keys:
 PJ 2 P_Hitting_To_The_Head;
 // player/enemy+key timeToPress nameOFNext
 // timeToPress: 0 = infinite
-//Every letter has to be written in caps
+// Every letter has to be written in caps
 // _: automatic, _ 0: instant
 _ 0 Initial_Position;
-//Straight to the initial position
+// Straight to the initial position
+// no number and the path will be taken, when all other timers have run out
+_ Initial_Position;
+// please remember to have at least one timer from the enemy and the player to end at the longest time, so nobody has at any point no option

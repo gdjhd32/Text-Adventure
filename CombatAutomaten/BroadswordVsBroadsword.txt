@@ -1,4 +1,4 @@
-hand 0.5; head 2;
+hand 0.5; head 2; swing 1.5;
 Initial_Position; PW 0 Move_Forward_Ini; You move forward.
-Move_Forward_Ini; PS 0 Initial_Position; You move backwards again.
-Get_Hit_Hand; PDMG hand; _ 0; The enemy strikes you at your hand.
+Move_Forward_Ini; PS 0 Initial_Position; _ Get_Hit_Hand; You move backwards again.
+Get_Hit_Hand; PDMG hand; _ 0 Initial_Position; The enemy strikes you at your hand.

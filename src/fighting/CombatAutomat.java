@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class CombatAutomat {
@@ -67,6 +68,8 @@ public class CombatAutomat {
 		
 		
 		for (int i = 0; scanner.hasNextLine(); i++) {
+			LinkedList<CombatAction> combatActions = new LinkedList<CombatAction>();
+			
 			l = scanner.nextLine();
 			//Comments will be ignored
 			if(!l.startsWith("//")) {
@@ -87,17 +90,32 @@ public class CombatAutomat {
 						else 
 							s.isPlayerHit = false;
 
-						if(section.length == 2) {
+						s.damageMultiplier = 1;
+						for(int p = 1; p < section.length; p++) {
 							//find the right value for the damage multiplier
-							for(int p = 0; p < damageMultiplierNames.length; p++) {
-								if(section[1].equals(damageMultiplierNames[p])) {
-									s.damageMultiplier = damageMultiplier[p];
-									System.out.println(damageMultiplier[0]);
+							for(int k = 0; k < damageMultiplierNames.length; k++) {
+								if(section[p].equals(damageMultiplierNames[k])) {
+									s.damageMultiplier = s.damageMultiplier * damageMultiplier[k];
 									break;
 								}
 							}
 						}
-						///////////////////////////////////////////
+					} else if(section[0].length() <= 2) {
+						CombatAction combatAction = new CombatAction();
+						if(section[0].charAt(0) == '_') {
+							combatAction.nextSituationName = section[1];
+							continue;
+						} else if(section[0].charAt(0) == 'P') 
+							combatAction.isPlayerAction = true;
+						else
+							combatAction.isPlayerAction = false;
+						
+						combatAction.key = section[0].substring(1).toLowerCase();
+						System.out.println(combatAction.key);
+						combatAction.maximumReactionTime = Double.parseDouble(section[1]);
+						combatAction.nextSituationName = section[2];
+						
+						combatActions.add(combatAction);
 					}
 					
 				}
@@ -138,19 +156,27 @@ public class CombatAutomat {
 		
 		public String description; //
 		public String name; //
-		public double damageMultiplier;
+		public double damageMultiplier; //
 		
-		public double damage;
+		public double damage; // necessary?
 		public boolean isPlayerHit; // if true, the damage is calculated for the player, if false for the enemy
 
-		public String[] pKeys; 
-		public int[] pTimesForKeys; 
-		public String[] eKeys; 
-		public int[] eTimesForKeys;
-
+		public CombatAction[] pActions;
+		public CombatAction[] eActions;
+		
 		public CombatSituation() {
 
 		}
-
+	}
+	
+	private class CombatAction {
+		
+		public String key;
+		public double maximumReactionTime;
+		public boolean isPlayerAction;
+		public CombatAction nextSituation;
+		
+		private String nextSituationName; // for one time use
+		
 	}
 }
