@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -68,34 +69,40 @@ public class CombatAutomat {
 		
 		
 		for (int i = 0; scanner.hasNextLine(); i++) {
-			LinkedList<CombatAction> combatActions = new LinkedList<CombatAction>();
-			
+			LinkedList<CombatAction> pCombatActions = new LinkedList<CombatAction>();
+			LinkedList<CombatAction> eCombatActions = new LinkedList<CombatAction>();
+					
 			l = scanner.nextLine();
 			//Comments will be ignored
 			if(!l.startsWith("//")) {
 				line = l.split(";");
 				
-				CombatSituation s = new CombatSituation();
-				s.name = line[0];
+				String description;
+				String name;
+				double damageMultiplier = 1;
+				double damage = 0;
+				boolean isPlayerHit = false;
+				
+				
+				name = line[0];
 				//removes, if necessary, the blank at the beginning of the string
 				if(line[line.length -1].charAt(0) == ' ') line[line.length -1] = line[line.length -1].substring(1);
-				s.description = line[line.length -1];
+				description = line[line.length -1];
 				
 				for(int o = 1; o < line.length - 1; o++) {
 					line[o] = removeBlankInFront(line[o]);
 					String[] section = line[o].split(" ");
 					if(section[0].substring(1).startsWith("DMG")) {
 						if(section[0].charAt(0) == 'P') 
-							s.isPlayerHit = true;
+							isPlayerHit = true;
 						else 
-							s.isPlayerHit = false;
+							isPlayerHit = false;
 
-						s.damageMultiplier = 1;
 						for(int p = 1; p < section.length; p++) {
 							//find the right value for the damage multiplier
 							for(int k = 0; k < damageMultiplierNames.length; k++) {
 								if(section[p].equals(damageMultiplierNames[k])) {
-									s.damageMultiplier = s.damageMultiplier * damageMultiplier[k];
+									damageMultiplier = damageMultiplier * this.damageMultiplier[k];
 									break;
 								}
 							}
@@ -105,20 +112,24 @@ public class CombatAutomat {
 						if(section[0].charAt(0) == '_') {
 							combatAction.nextSituationName = section[1];
 							continue;
-						} else if(section[0].charAt(0) == 'P') 
-							combatAction.isPlayerAction = true;
-						else
-							combatAction.isPlayerAction = false;
+						} 
 						
 						combatAction.key = section[0].substring(1).toLowerCase();
 						System.out.println(combatAction.key);
 						combatAction.maximumReactionTime = Double.parseDouble(section[1]);
 						combatAction.nextSituationName = section[2];
 						
-						combatActions.add(combatAction);
+						if(section[0].charAt(0) == 'P') 
+							pCombatActions.add(combatAction);
+						else
+							eCombatActions.add(combatAction);
 					}
 					
+					ArrayList<CombatAction> temp = new ArrayList<CombatAction>();
+					
 				}
+				
+				CombatSituation s = new CombatSituation(description, name, damageMultiplier, damage, isPlayerHit, pCombatActions.toArray(new CombatAction[pCombatActions.size()]), eCombatActions.toArray(new CombatAction[eCombatActions.size()]));
 				
 				System.out.println(s.description);
 				situations[i] = s;
@@ -152,29 +163,30 @@ public class CombatAutomat {
 		return null;
 	}
 
-	private class CombatSituation {
-		
-		public String description; //
-		public String name; //
-		public double damageMultiplier; //
-		
-		public double damage; // necessary?
-		public boolean isPlayerHit; // if true, the damage is calculated for the player, if false for the enemy
-
-		public CombatAction[] pActions;
-		public CombatAction[] eActions;
-		
-		public CombatSituation() {
-
-		}
-	}
+//	private class CombatSituation {
+//		
+//		public String description; //
+//		public String name; //
+//		public double damageMultiplier; //
+//		
+//		public double damage; // necessary?
+//		public boolean isPlayerHit; // if true, the damage is calculated for the player, if false for the enemy
+//
+//		public CombatAction[] pActions;
+//		public CombatAction[] eActions;
+//		
+//		public CombatSituation() {
+//
+//		}
+//	}
+	
+	private record CombatSituation(String description, String name, double damageMultiplier, double damage, boolean isPlayerHit, CombatAction[] pActions, CombatAction[] eActions) {}
 	
 	private class CombatAction {
 		
 		public String key;
 		public double maximumReactionTime;
-		public boolean isPlayerAction;
-		public CombatAction nextSituation;
+		public CombatSituation nextSituation;
 		
 		private String nextSituationName; // for one time use
 		
