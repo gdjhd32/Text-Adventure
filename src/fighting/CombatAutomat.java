@@ -52,10 +52,6 @@ public class CombatAutomat {
 		}
 		String[] line = l.split(";");
 		//removes, if necessary, the blank at the beginning of the strings
-//		for(int i = 0; i < line.length; i++) {
-//			if(line[i].charAt(0) == ' ')
-//				line[i] = line[i].substring(1);
-//		}
 		removeBlankInFront(line);
 		
 		//reads the damage multiplier at the beginning of the text file
@@ -69,71 +65,72 @@ public class CombatAutomat {
 		
 		
 		for (int i = 0; scanner.hasNextLine(); i++) {
-			LinkedList<CombatAction> pCombatActions = new LinkedList<CombatAction>();
-			LinkedList<CombatAction> eCombatActions = new LinkedList<CombatAction>();
-					
 			l = scanner.nextLine();
 			//Comments will be ignored
 			if(!l.startsWith("//")) {
-				line = l.split(";");
-				
-				String description;
-				String name;
-				double damageMultiplier = 1;
-				double damage = 0;
-				boolean isPlayerHit = false;
-				
-				
-				name = line[0];
-				//removes, if necessary, the blank at the beginning of the string
-				if(line[line.length -1].charAt(0) == ' ') line[line.length -1] = line[line.length -1].substring(1);
-				description = line[line.length -1];
-				
-				for(int o = 1; o < line.length - 1; o++) {
-					line[o] = removeBlankInFront(line[o]);
-					String[] section = line[o].split(" ");
-					if(section[0].substring(1).startsWith("DMG")) {
-						if(section[0].charAt(0) == 'P') 
-							isPlayerHit = true;
-						else 
-							isPlayerHit = false;
+				i--;
+				continue;
+			}
+			LinkedList<CombatAction> pCombatActions = new LinkedList<CombatAction>();
+			LinkedList<CombatAction> eCombatActions = new LinkedList<CombatAction>();
+			
+			line = l.split(";");
+			
+			String description;
+			String name;
+			double damageMultiplier = 1;
+			double damage = 0;
+			boolean isPlayerHit = false;
+			
+			
+			name = line[0];
+			//removes, if necessary, the blank at the beginning of the string
+			if(line[line.length -1].charAt(0) == ' ') line[line.length -1] = line[line.length -1].substring(1);
+			description = line[line.length -1];
+			
+			for(int o = 1; o < line.length - 1; o++) {
+				line[o] = removeBlankInFront(line[o]);
+				String[] section = line[o].split(" ");
+				if(section[0].substring(1).startsWith("DMG")) {
+					if(section[0].charAt(0) == 'P') 
+						isPlayerHit = true;
+					else 
+						isPlayerHit = false;
 
-						for(int p = 1; p < section.length; p++) {
-							//find the right value for the damage multiplier
-							for(int k = 0; k < damageMultiplierNames.length; k++) {
-								if(section[p].equals(damageMultiplierNames[k])) {
-									damageMultiplier = damageMultiplier * this.damageMultiplier[k];
-									break;
-								}
+					for(int p = 1; p < section.length; p++) {
+						//find the right value for the damage multiplier
+						for(int k = 0; k < damageMultiplierNames.length; k++) {
+							if(section[p].equals(damageMultiplierNames[k])) {
+								damageMultiplier = damageMultiplier * this.damageMultiplier[k];
+								break;
 							}
 						}
-					} else if(section[0].length() <= 2) {
-						CombatAction combatAction = new CombatAction();
-						if(section[0].charAt(0) == '_') {
-							combatAction.nextSituationName = section[1];
-							continue;
-						} 
-						
-						combatAction.key = section[0].substring(1).toLowerCase();
-						System.out.println(combatAction.key);
-						combatAction.maximumReactionTime = Double.parseDouble(section[1]);
-						combatAction.nextSituationName = section[2];
-						
-						if(section[0].charAt(0) == 'P') 
-							pCombatActions.add(combatAction);
-						else
-							eCombatActions.add(combatAction);
 					}
+				} else if(section[0].length() <= 2) {
+					CombatAction combatAction = new CombatAction();
+					if(section[0].charAt(0) == '_') {
+						combatAction.nextSituationName = section[1];
+						continue;
+					} 
 					
-					ArrayList<CombatAction> temp = new ArrayList<CombatAction>();
+					combatAction.key = section[0].substring(1).toLowerCase();
+					System.out.println(combatAction.key);
+					combatAction.maximumReactionTime = Double.parseDouble(section[1]);
+					combatAction.nextSituationName = section[2];
 					
+					if(section[0].charAt(0) == 'P') 
+						pCombatActions.add(combatAction);
+					else
+						eCombatActions.add(combatAction);
 				}
-				
-				CombatSituation s = new CombatSituation(description, name, damageMultiplier, damage, isPlayerHit, pCombatActions.toArray(new CombatAction[pCombatActions.size()]), eCombatActions.toArray(new CombatAction[eCombatActions.size()]));
-				
-				System.out.println(s.description);
-				situations[i] = s;
-			} 
+								
+			}
+			
+			CombatSituation s = new CombatSituation(description, name, damageMultiplier, damage, isPlayerHit, pCombatActions.toArray(new CombatAction[pCombatActions.size()]), eCombatActions.toArray(new CombatAction[eCombatActions.size()]));
+			
+			System.out.println(s.description);
+			situations[i] = s;
+		
 		}
 		
 		scanner.close();
@@ -152,6 +149,7 @@ public class CombatAutomat {
 		}
 	}
 	
+	//delete enums and make it with txt
 	private File getAutomatType(Fighter player, Fighter enemy) {
 		//BroadswordVsBroadsword
 		if(player.getWeapon().TYPE.equals(enemy.getWeapon().TYPE)) {
@@ -162,27 +160,9 @@ public class CombatAutomat {
 		System.out.println("No AutomatType found");
 		return null;
 	}
-
-//	private class CombatSituation {
-//		
-//		public String description; //
-//		public String name; //
-//		public double damageMultiplier; //
-//		
-//		public double damage; // necessary?
-//		public boolean isPlayerHit; // if true, the damage is calculated for the player, if false for the enemy
-//
-//		public CombatAction[] pActions;
-//		public CombatAction[] eActions;
-//		
-//		public CombatSituation() {
-//
-//		}
-//	}
 	
 	private record CombatSituation(String description, String name, double damageMultiplier, double damage, boolean isPlayerHit, CombatAction[] pActions, CombatAction[] eActions) {}
 	
-	@SuppressWarnings("unused")
 	private class CombatAction {
 		
 		public String key;
