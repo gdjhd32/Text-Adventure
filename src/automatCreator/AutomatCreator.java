@@ -2,6 +2,7 @@ package automatCreator;
 
 import javax.swing.JFrame;
 
+@SuppressWarnings("serial")
 public class AutomatCreator extends JFrame {
 	
 	public static void main(String[] args) {

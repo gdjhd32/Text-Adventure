@@ -1,7 +1,6 @@
 package main;
 
 import fighting.Armor;
-import fighting.Armor.ArmorType;
 import fighting.CombatSystem;
 import fighting.Fighter;
 import fighting.Fighter.Direction;
@@ -24,11 +23,11 @@ public class Main {
 	public Main() {
 		player = new Fighter("X", 1, 1, 1);
 		player.setWeapon(new Weapon("Wooden Sword", 1, WeaponType.Broadsword));
-		player.setArmor(new Armor("Leather Armor", 1, ArmorType.Leather));
+		player.setArmor(new Armor("Leather Armor", 1, "Leather"));
 		
 		enemy = new Fighter("Skeleton Soldier", 1, 1, 1);
 		enemy.setWeapon(new Weapon("Bone Sword", 2, WeaponType.Broadsword));
-		enemy.setArmor(new Armor("Iron Armor", 2, ArmorType.Iron));
+		enemy.setArmor(new Armor("Iron Armor", 2, "Iron"));
 		
 		render = new Render(this, VALID_KEYS);
 		render.refreshChangeableLabel();

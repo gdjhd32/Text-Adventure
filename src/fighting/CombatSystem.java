@@ -3,11 +3,11 @@ package fighting;
 import fighting.Fighter.Direction;
 import fighting.Fighter.Position;
 import gui.Render;
-import main.Main;
 
 public class CombatSystem {
 
 	private final Fighter PLAYER;
+	@SuppressWarnings("unused")
 	private final Fighter ENEMY;
 	private final Render RENDER;
 

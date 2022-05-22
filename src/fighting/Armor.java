@@ -4,13 +4,9 @@ public class Armor {
 
 	public final int DEF; // defense
 	public final String NAME;
-	public final ArmorType TYPE;
+	public final String TYPE;
 
-	public static enum ArmorType {
-		Leather, Iron
-	}
-
-	public Armor(String name, int def, ArmorType type) {
+	public Armor(String name, int def, String type) {
 		NAME = name;
 		DEF = def;
 		TYPE = type;
