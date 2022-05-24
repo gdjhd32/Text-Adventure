@@ -149,10 +149,9 @@ public class CombatAutomat {
 		}
 	}
 	
-	//delete enums and make it with txt
 	private File getAutomatType(Fighter player, Fighter enemy) {
 		//BroadswordVsBroadsword
-		if(player.getWeapon().TYPE.equals(enemy.getWeapon().TYPE)) {
+		if(player.getWeapon().type().equals(enemy.getWeapon().type())) {
 			return new File("CombatAutomaten/BroadswordVsBroadsword.txt");
 		}
 		

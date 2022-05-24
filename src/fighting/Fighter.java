@@ -40,7 +40,7 @@ public class Fighter {
 
 	public void setWeapon(Weapon w) {
 		weapon = w;
-		setAtk(weapon.ATK);
+		setAtk(weapon.atk());
 	}
 
 	public Armor getArmor() {
@@ -49,7 +49,7 @@ public class Fighter {
 
 	public void setArmor(Armor a) {
 		armor = a;
-		maxDef = armor.DEF;
+		maxDef = armor.def();
 		currentDef = maxDef;
 	}
 

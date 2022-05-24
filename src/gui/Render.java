@@ -237,11 +237,11 @@ public class Render extends JFrame {
 
 	public void refreshArmorLabel() {
 		if (PARENT.getPlayer().getArmor() != null) {
-			playerArmor.setText("Armor: " + PARENT.getPlayer().getArmor().NAME);
+			playerArmor.setText("Armor: " + PARENT.getPlayer().getArmor().name());
 			playerDef.setText("DEF: " + PARENT.getPlayer().getCurrentDef() + " / " + PARENT.getPlayer().getMaxDef());
 		}
 		if (PARENT.getEnemy().getArmor() != null) {
-			enemyArmor.setText("Armor: " + PARENT.getEnemy().getArmor().NAME);
+			enemyArmor.setText("Armor: " + PARENT.getEnemy().getArmor().name());
 			enemyDef.setText("DEF: " + PARENT.getEnemy().getCurrentDef() + " / " + PARENT.getEnemy().getMaxDef());
 		}
 	}
