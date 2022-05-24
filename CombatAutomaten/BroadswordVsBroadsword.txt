@@ -1,5 +1,5 @@
 hand 0.5; head 2; swing 1.5;
-Initial_Position; PW 0 Move_Forward_Ini; You move forward.
+Initial_Position; PW 0 Move_Forward_Ini; PS 0 Get_Hit_Hand; Hello, you are under attack.
 //Hello
-Move_Forward_Ini; PS 0 Initial_Position; _ Get_Hit_Hand; You move backwards again.
-Get_Hit_Hand; PDMG hand; _ 0 Initial_Position; The enemy strikes you at your hand.
+Move_Forward_Ini; PS 0 Initial_Position; _ Get_Hit_Hand; You move forward.
+Get_Hit_Hand; PDMG hand <You took <DMG> damage and died.>; _ 0 Initial_Position; The enemy strikes you at your hand and deals <DMG> damage.

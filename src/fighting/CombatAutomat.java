@@ -2,35 +2,82 @@ package fighting;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
+import gui.Render;
+
 public class CombatAutomat {
+	
+	private final Render render;
+	private final Fighter enemy, player;
 
 	CombatSituation[] situations;
+	CombatSituation currentSituation;
 
-	public String[] damageMultiplierNames;
-	public double[] damageMultiplier;
-	
-	@SuppressWarnings("unused")
-	private enum AutomatType {
-		BroadswordVsBroadsword
-	}
+	private String[] damageMultiplierNames;
+	private double[] damageMultiplier;
 
-	public CombatAutomat(Fighter player, Fighter enemy) {
+	public CombatAutomat(Fighter player, Fighter enemy, Render render) {
+		this.render = render;
+		this.player = player;
+		this.enemy = enemy;
 		try {
 			createAutomat(getAutomatType(player, enemy));
+			changeSituation(situations[0]);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void keyPressed(String key) {
+		CombatAction[] actions = currentSituation.pActions();
+		for(int i = 0; i < actions.length; i++) {
+			if(actions[i].key.equals(key)) {
+				changeSituation(actions[i].nextSituation);
+				break;
+			}
+		}
+	}
+	
+	private void changeSituation(CombatSituation newSituation) {
+		currentSituation = newSituation;
+		
+		System.out.println(currentSituation.name + ": " + currentSituation.deathMessage());
+		
+		String output = currentSituation.description();
+		
+		//damage calculation
+		if(currentSituation.damageMultiplier != 0) {
+			double damage;
+			if(currentSituation.isPlayerHit) {
+				damage = player.getCurrentHp() - enemy.getStr() * enemy.getWeapon().atk() * player.getArmor().def() * player.getCurrentDef() * currentSituation.damageMultiplier;
+				player.setCurrentHp(damage);
+			} else {
+				damage = enemy.getCurrentHp() - player.getStr() * player.getWeapon().atk() * enemy.getArmor().def() * enemy.getCurrentDef() * currentSituation.damageMultiplier;
+				enemy.setCurrentHp(damage);
+			}
+			
+			if(player.getCurrentHp() <= 0) {
+				player.setCurrentHp(0);
+				output = currentSituation.deathMessage();
+			} else if(enemy.getCurrentHp() <= 0) {
+				enemy.setCurrentHp(0);
+				output = currentSituation.deathMessage();
+			}
+			
+			output = output.replaceAll("<DMG>", (damage * -1) + "");
+		}
+		
+		//output
+		render.println(output);
+		render.refreshChangeableLabel();
+	}
+	
 	/**
 	 * @param file The file that will be used to create the CombatAutomat.
 	 * @throws FileNotFoundException If the handed over File was not found.
 	 */
-	@SuppressWarnings("unused")
 	private void createAutomat(File file) throws FileNotFoundException {
 		Scanner scanner = new Scanner(file);
 
@@ -41,15 +88,11 @@ public class CombatAutomat {
 				length++;
 		}
 		
-		situations = new CombatSituation[length - 1]; //-1, because the first line is reserved for damage multiplier
+		situations = new CombatSituation[length - 1]; //-1, because the first line is reserved for damage multipliers
 		scanner.close();
 		scanner = new Scanner(file);
 		
 		String l = scanner.nextLine();
-		//Comments will be ignored
-		while(l.startsWith("//")) {
-			scanner.nextLine();
-		}
 		String[] line = l.split(";");
 		//removes, if necessary, the blank at the beginning of the strings
 		removeBlankInFront(line);
@@ -67,7 +110,7 @@ public class CombatAutomat {
 		for (int i = 0; scanner.hasNextLine(); i++) {
 			l = scanner.nextLine();
 			//Comments will be ignored
-			if(!l.startsWith("//")) {
+			if(l.startsWith("//")) {
 				i--;
 				continue;
 			}
@@ -78,32 +121,40 @@ public class CombatAutomat {
 			
 			String description;
 			String name;
-			double damageMultiplier = 1;
-			double damage = 0;
+			String deathMessage = "";
+			double damageMultiplier = 0;
 			boolean isPlayerHit = false;
 			
 			
 			name = line[0];
-			//removes, if necessary, the blank at the beginning of the string
-			if(line[line.length -1].charAt(0) == ' ') line[line.length -1] = line[line.length -1].substring(1);
-			description = line[line.length -1];
+			description = line[line.length -1].trim();
 			
 			for(int o = 1; o < line.length - 1; o++) {
-				line[o] = removeBlankInFront(line[o]);
+				line[o] = line[o].trim();
 				String[] section = line[o].split(" ");
 				if(section[0].substring(1).startsWith("DMG")) {
+					damageMultiplier = 1;
 					if(section[0].charAt(0) == 'P') 
 						isPlayerHit = true;
 					else 
 						isPlayerHit = false;
 
 					for(int p = 1; p < section.length; p++) {
-						//find the right value for the damage multiplier
-						for(int k = 0; k < damageMultiplierNames.length; k++) {
-							if(section[p].equals(damageMultiplierNames[k])) {
-								damageMultiplier = damageMultiplier * this.damageMultiplier[k];
-								break;
+						if(section[p].charAt(0) != '<')
+							//find the right value for the damage multiplier
+							for(int k = 0; k < damageMultiplierNames.length; k++) {
+								if(section[p].equals(damageMultiplierNames[k])) {
+									damageMultiplier = damageMultiplier * this.damageMultiplier[k];
+									break;
+								}
 							}
+						else {
+							int k = 0;
+							while (line[o].charAt(k) != '<') {
+								k++;
+							}
+							deathMessage = line[o].substring(k + 1, line[o].length() - 1);
+							System.out.println(deathMessage);
 						}
 					}
 				} else if(section[0].length() <= 2) {
@@ -125,27 +176,33 @@ public class CombatAutomat {
 				}
 								
 			}
+						
+			CombatSituation s = new CombatSituation(description, name, damageMultiplier, isPlayerHit, deathMessage, pCombatActions.toArray(new CombatAction[pCombatActions.size()]), eCombatActions.toArray(new CombatAction[eCombatActions.size()]));
 			
-			CombatSituation s = new CombatSituation(description, name, damageMultiplier, damage, isPlayerHit, pCombatActions.toArray(new CombatAction[pCombatActions.size()]), eCombatActions.toArray(new CombatAction[eCombatActions.size()]));
-			
-			System.out.println(s.description);
 			situations[i] = s;
 		
+		}
+		
+		//uses the name of the next situation in action to find the reference to the next situation
+		for(int i = 0; i < situations.length; i++) {
+			CombatAction[] actions = situations[i].pActions;
+			for(int o = 0; o < actions.length; o++) {
+				String name = actions[o].nextSituationName;
+				for(int p = 0; p < situations.length; p++) {
+					if(name.equals(situations[p].name())) {
+						actions[o].nextSituation = situations[p];
+						break;
+					}
+				}
+			}
 		}
 		
 		scanner.close();
 	}
 	
-	private String removeBlankInFront(String string) {
-		if(string.charAt(0) == ' ') 
-			string = string.substring(1);
-		return string;
-	}
-	
 	private void removeBlankInFront(String[] strings) {
 		for(int i = 0; i < strings.length; i++) {
-			if(strings[i].charAt(0) == ' ')
-				strings[i] = strings[i].substring(1);
+			strings[i] = strings[i].trim();
 		}
 	}
 	
@@ -160,7 +217,7 @@ public class CombatAutomat {
 		return null;
 	}
 	
-	private record CombatSituation(String description, String name, double damageMultiplier, double damage, boolean isPlayerHit, CombatAction[] pActions, CombatAction[] eActions) {}
+	private record CombatSituation(String description, String name, double damageMultiplier, boolean isPlayerHit, String deathMessage, CombatAction[] pActions, CombatAction[] eActions) {}
 	
 	private class CombatAction {
 		

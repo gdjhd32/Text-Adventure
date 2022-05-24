@@ -226,11 +226,11 @@ public class Render extends JFrame {
 
 	public void refreshWeaponLabel() {
 		if (PARENT.getPlayer().getWeapon() != null) {
-			playerWeapon.setText("Weapon: " + PARENT.getPlayer().getWeapon().NAME);
+			playerWeapon.setText("Weapon: " + PARENT.getPlayer().getWeapon().name());
 			playerAtk.setText("ATK: " + PARENT.getPlayer().getAtk());
 		}
 		if (PARENT.getEnemy().getWeapon() != null) {
-			enemyWeapon.setText("Weapon: " + PARENT.getEnemy().getWeapon().NAME);
+			enemyWeapon.setText("Weapon: " + PARENT.getEnemy().getWeapon().name());
 			enemyAtk.setText("ATK: " + PARENT.getPlayer().getAtk());
 		}
 	}
