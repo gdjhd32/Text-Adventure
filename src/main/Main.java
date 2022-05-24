@@ -1,9 +1,8 @@
 package main;
 
 import fighting.Armor;
-import fighting.CombatSystem;
+import fighting.CombatAutomat;
 import fighting.Fighter;
-import fighting.Fighter.Direction;
 import fighting.Weapon;
 import gui.Render;
 
@@ -17,14 +16,16 @@ public class Main {
 
 	private final Render render;
 	private Fighter player, enemy;
-	private CombatSystem fightingField;
+	private CombatAutomat fightingField;
 
 	public Main() {
 		player = new Fighter("X", 1, 1, 1);
-		player.setWeapon(new Weapon("Wooden Sword", 1, "Broadsword"));
-		player.setArmor(new Armor("Leather Armor", 1, "Leather"));
+
+    player.setWeapon(new Weapon("Wooden Sword", 2, "Broadsword"));
+		player.setArmor(new Armor("Leather Armor", 2, "Leather"));
 		
-		enemy = new Fighter("Skeleton Soldier", 1, 1, 1);
+		enemy = new Fighter("Skeleton Soldier", 2, 2, 2);
+
 		enemy.setWeapon(new Weapon("Bone Sword", 2, "Broadsword"));
 		enemy.setArmor(new Armor("Iron Armor", 2, "Iron"));
 		
@@ -34,26 +35,11 @@ public class Main {
 		render.refreshArmorLabel();
 		render.println("Welcome to our small game!");
 		
-		fightingField = new CombatSystem(render, player, enemy);
+		fightingField = new CombatAutomat(player, enemy, render);
 	}
 
 	public void keyPressed(String key) {
-		switch (key) {
-		case "w":
-			fightingField.movePlayer(Direction.Up);
-			break;
-		case "s":
-			fightingField.movePlayer(Direction.Down);
-			break;
-		case "a":
-			fightingField.movePlayer(Direction.Left);
-			break;
-		case "d":
-			fightingField.movePlayer(Direction.Right);
-			break;
-		default:
-			return;
-		}
+		fightingField.keyPressed(key);
 	}
 
 	public Fighter getPlayer() {

@@ -7,7 +7,7 @@ public class Fighter {
 
 	private int ag; // agility
 	private int maxHp; // health points
-	private int currentHp;
+	private double currentHp;
 	private int str; // strength
 	private int atk = 0; // attack
 	private int maxDef = 0; // defense
@@ -40,7 +40,7 @@ public class Fighter {
 
 	public void setWeapon(Weapon w) {
 		weapon = w;
-		setAtk(weapon.ATK);
+		setAtk(weapon.atk());
 	}
 
 	public Armor getArmor() {
@@ -49,7 +49,7 @@ public class Fighter {
 
 	public void setArmor(Armor a) {
 		armor = a;
-		maxDef = armor.DEF;
+		maxDef = armor.def();
 		currentDef = maxDef;
 	}
 
@@ -61,11 +61,11 @@ public class Fighter {
 		this.maxHp = hp;
 	}
 
-	public int getCurrentHp() {
+	public double getCurrentHp() {
 		return currentHp;
 	}
 
-	public void setCurrentHp(int hp) {
+	public void setCurrentHp(double hp) {
 		this.currentHp = hp;
 	}
 
