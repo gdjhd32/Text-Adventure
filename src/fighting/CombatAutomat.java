@@ -9,6 +9,9 @@ import gui.Render;
 
 public class CombatAutomat {
 
+	private Timer pTimer;
+	private Timer eTimer;
+
 	private final Render render;
 	private final Fighter enemy, player;
 
@@ -32,17 +35,29 @@ public class CombatAutomat {
 
 	public void keyPressed(String key, boolean isPlayer) {
 		CombatAction[] actions = currentSituation.pActions();
+
 		for (int i = 0; i < actions.length; i++) {
+			if (actions[i].key == null)
+				continue;
 			if (actions[i].key.equals(key)) {
-				if(actions[i].isTimerActive)
+				if (actions[i].isTimerActive)
 					changeSituation(actions[i].nextSituation);
 				break;
 			}
 		}
+		
 	}
 
 	private void changeSituation(CombatSituation newSituation) {
 		currentSituation = newSituation;
+
+		if (pTimer != null)
+			pTimer.interrupt();
+
+		CombatAction[] actions = currentSituation.pActions();
+		for (int i = 0; i < actions.length; i++) {
+			actions[i].isTimerActive = true;
+		}
 
 		System.out.println(currentSituation.name + ": " + currentSituation.deathMessage());
 
@@ -52,12 +67,12 @@ public class CombatAutomat {
 		if (currentSituation.damageMultiplier != 0) {
 			double damage;
 			if (currentSituation.isPlayerHit) {
-				damage = enemy.getStr() * enemy.getWeapon().atk()
-						* player.getArmor().getCurrentDef() * currentSituation.damageMultiplier;
+				damage = enemy.getStr() * enemy.getWeapon().atk() * player.getArmor().getCurrentDef()
+						* currentSituation.damageMultiplier;
 				player.setCurrentHp(player.getCurrentHp() - damage);
 			} else {
-				damage = player.getStr() * player.getWeapon().atk()
-						* enemy.getArmor().getCurrentDef() * currentSituation.damageMultiplier;
+				damage = player.getStr() * player.getWeapon().atk() * enemy.getArmor().getCurrentDef()
+						* currentSituation.damageMultiplier;
 				enemy.setCurrentHp(enemy.getCurrentHp() - damage);
 			}
 
@@ -75,9 +90,12 @@ public class CombatAutomat {
 		// output
 		render.println(output);
 		render.refreshChangeableLabel();
-		
-		new Timer(currentSituation.pActions()).start();
-//		new Timer(currentSituation.eActions()).start();
+
+		pTimer = new Timer(currentSituation.pActions(), null, true);
+		eTimer = new Timer(currentSituation.eActions(), pTimer, false);
+		pTimer.setOtherTimer(eTimer);
+		pTimer.start();
+		eTimer.start();
 	}
 
 	/**
@@ -100,7 +118,7 @@ public class CombatAutomat {
 
 		String l = scanner.nextLine();
 		String[] line = l.split(";");
-		// removes, if necessary, the blank at the beginning of the strings
+
 		removeBlankInFront(line);
 
 		// reads the damage multiplier at the beginning of the text file
@@ -158,29 +176,32 @@ public class CombatAutomat {
 								k++;
 							}
 							deathMessage = line[o].substring(k + 1, line[o].length() - 1);
-							System.out.println(deathMessage);
 						}
 					}
 				} else if (section[0].length() <= 2) {
 					CombatAction combatAction;
 					if (section[0].charAt(0) == '_') {
-						
+
 						combatAction = new CombatAction() {
 							@Override
 							public void timerEnd() {
 								isTimerActive = false;
 								changeSituation(this.nextSituation);
-								System.out.println(this.key);
+								System.out.println("------------------------------------");
 							}
 						};
-						
-						if(section.length == 3) {
+
+						if (section.length == 3) {
 							combatAction.maximumReactionTime = Integer.parseInt(section[1]) * 1000;
 							combatAction.nextSituationName = section[2];
 						} else {
 							combatAction.maximumReactionTime = -1;
 							combatAction.nextSituationName = section[1];
 						}
+
+						// it has to be added to both
+						pCombatActions.add(combatAction);
+						eCombatActions.add(combatAction);
 						continue;
 					} else
 						combatAction = new CombatAction() {
