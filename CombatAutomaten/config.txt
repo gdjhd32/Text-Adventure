@@ -1,0 +1,5 @@
+Weapons:
+Wooden Sword; 1 Broadsword
+Armor:
+Leather Armor; 1 Leather
+Enemies:

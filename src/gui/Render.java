@@ -226,22 +226,22 @@ public class Render extends JFrame {
 
 	public void refreshWeaponLabel() {
 		if (PARENT.getPlayer().getWeapon() != null) {
-			playerWeapon.setText("Weapon: " + PARENT.getPlayer().getWeapon().NAME);
+			playerWeapon.setText("Weapon: " + PARENT.getPlayer().getWeapon().name());
 			playerAtk.setText("ATK: " + PARENT.getPlayer().getAtk());
 		}
 		if (PARENT.getEnemy().getWeapon() != null) {
-			enemyWeapon.setText("Weapon: " + PARENT.getEnemy().getWeapon().NAME);
+			enemyWeapon.setText("Weapon: " + PARENT.getEnemy().getWeapon().name());
 			enemyAtk.setText("ATK: " + PARENT.getPlayer().getAtk());
 		}
 	}
 
 	public void refreshArmorLabel() {
 		if (PARENT.getPlayer().getArmor() != null) {
-			playerArmor.setText("Armor: " + PARENT.getPlayer().getArmor().NAME);
+			playerArmor.setText("Armor: " + PARENT.getPlayer().getArmor().name());
 			playerDef.setText("DEF: " + PARENT.getPlayer().getCurrentDef() + " / " + PARENT.getPlayer().getMaxDef());
 		}
 		if (PARENT.getEnemy().getArmor() != null) {
-			enemyArmor.setText("Armor: " + PARENT.getEnemy().getArmor().NAME);
+			enemyArmor.setText("Armor: " + PARENT.getEnemy().getArmor().name());
 			enemyDef.setText("DEF: " + PARENT.getEnemy().getCurrentDef() + " / " + PARENT.getEnemy().getMaxDef());
 		}
 	}

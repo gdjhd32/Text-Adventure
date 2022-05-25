@@ -1,5 +1,6 @@
 // Separate sections in on line with ;
-// First valid line in text file is ALWAYS damage multiplier
+// First line in text file is ALWAYS damage multiplier
+// First CombatSituation is ALWAYS the initial position of the CombatAutomat
 // First ALWAYS the name of the CombatSituation
 // Last ALWAYS the description
 // P: player, E: enemy
@@ -11,6 +12,9 @@ hand 0.5;
 PDMG hand;
 // damage to the player, base damage multiplied with strength of enemy, protection of player and the damage multiplier of hand
 // When there are multiple damage multiplier, they are just multiplied all with the damage
+// When, in case the player or enemy dies in that situation, a different death message should be printed,
+// this death message should be added at the end of the DMG statement in angled brackets
+PDMG head <You died from fire.>
 // To write down informations for the keys:
 PJ 2 P_Hitting_To_The_Head;
 // player/enemy+key timeToPress nameOFNext
