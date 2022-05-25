@@ -107,7 +107,7 @@ public class Render extends JFrame {
 		playerWeapon.setForeground(labelColor);
 		add(playerWeapon);
 
-		playerAtk = new Label("ATK: " + PARENT.getPlayer().getAtk());
+		playerAtk = new Label("ATK: " + PARENT.getPlayer().getWeapon().atk());
 		playerAtk.setBounds(0, 100, leftSideSize + 2, 20);
 		playerAtk.setBackground(backgroundColor);
 		playerAtk.setForeground(labelColor);
@@ -119,7 +119,7 @@ public class Render extends JFrame {
 		playerArmor.setForeground(labelColor);
 		add(playerArmor);
 
-		playerDef = new Label("DEF: " + PARENT.getPlayer().getCurrentDef() + " / " + PARENT.getPlayer().getMaxDef());
+		playerDef = new Label("DEF: " + PARENT.getPlayer().getArmor().getCurrentDef() + " / " + PARENT.getPlayer().getArmor().getMaxDef());
 		playerDef.setBounds(0, 140, leftSideSize + 2, 20);
 		playerDef.setBackground(backgroundColor);
 		playerDef.setForeground(labelColor);
@@ -162,7 +162,7 @@ public class Render extends JFrame {
 		enemyWeapon.setForeground(labelColor);
 		add(enemyWeapon);
 
-		enemyAtk = new Label("ATK: " + PARENT.getEnemy().getAtk());
+		enemyAtk = new Label("ATK: " + PARENT.getEnemy().getWeapon().atk());
 		enemyAtk.setBounds(leftSideSize + textAreaWidth - 26, 100, rightSideSize, 20);
 		enemyAtk.setBackground(backgroundColor);
 		enemyAtk.setForeground(labelColor);
@@ -174,7 +174,7 @@ public class Render extends JFrame {
 		enemyArmor.setForeground(labelColor);
 		add(enemyArmor);
 
-		enemyDef = new Label("DEF: " + PARENT.getEnemy().getCurrentDef() + " / " + PARENT.getEnemy().getMaxDef());
+		enemyDef = new Label("DEF: " + PARENT.getEnemy().getArmor().getCurrentDef() + " / " + PARENT.getEnemy().getArmor().getMaxDef());
 		enemyDef.setBounds(leftSideSize + textAreaWidth - 26, 140, rightSideSize, 20);
 		enemyDef.setBackground(backgroundColor);
 		enemyDef.setForeground(labelColor);
@@ -219,30 +219,30 @@ public class Render extends JFrame {
 
 	public void refreshChangeableLabel() {
 		playerHP.setText("HP: " + PARENT.getPlayer().getCurrentHp() + " / " + PARENT.getPlayer().getMaxHp());
-		playerDef.setText("DEF: " + PARENT.getPlayer().getCurrentDef() + " / " + PARENT.getPlayer().getMaxDef());
+		playerDef.setText("DEF: " + PARENT.getPlayer().getArmor().getCurrentDef() + " / " + PARENT.getPlayer().getArmor().getMaxDef());
 		enemyHP.setText("HP: " + PARENT.getEnemy().getCurrentHp() + " / " + PARENT.getEnemy().getMaxHp());
-		enemyDef.setText("DEF: " + PARENT.getEnemy().getCurrentDef() + " / " + PARENT.getEnemy().getMaxDef());
+		enemyDef.setText("DEF: " + PARENT.getEnemy().getArmor().getCurrentDef() + " / " + PARENT.getEnemy().getArmor().getMaxDef());
 	}
 
 	public void refreshWeaponLabel() {
 		if (PARENT.getPlayer().getWeapon() != null) {
 			playerWeapon.setText("Weapon: " + PARENT.getPlayer().getWeapon().name());
-			playerAtk.setText("ATK: " + PARENT.getPlayer().getAtk());
+			playerAtk.setText("ATK: " + PARENT.getPlayer().getWeapon().atk());
 		}
 		if (PARENT.getEnemy().getWeapon() != null) {
 			enemyWeapon.setText("Weapon: " + PARENT.getEnemy().getWeapon().name());
-			enemyAtk.setText("ATK: " + PARENT.getPlayer().getAtk());
+			enemyAtk.setText("ATK: " + PARENT.getPlayer().getWeapon().atk());
 		}
 	}
 
 	public void refreshArmorLabel() {
 		if (PARENT.getPlayer().getArmor() != null) {
-			playerArmor.setText("Armor: " + PARENT.getPlayer().getArmor().name());
-			playerDef.setText("DEF: " + PARENT.getPlayer().getCurrentDef() + " / " + PARENT.getPlayer().getMaxDef());
+			playerArmor.setText("Armor: " + PARENT.getPlayer().getArmor().getName());
+			playerDef.setText("DEF: " + PARENT.getPlayer().getArmor().getCurrentDef() + " / " + PARENT.getPlayer().getArmor().getMaxDef());
 		}
 		if (PARENT.getEnemy().getArmor() != null) {
-			enemyArmor.setText("Armor: " + PARENT.getEnemy().getArmor().name());
-			enemyDef.setText("DEF: " + PARENT.getEnemy().getCurrentDef() + " / " + PARENT.getEnemy().getMaxDef());
+			enemyArmor.setText("Armor: " + PARENT.getEnemy().getArmor().getName());
+			enemyDef.setText("DEF: " + PARENT.getEnemy().getArmor().getCurrentDef() + " / " + PARENT.getEnemy().getArmor().getMaxDef());
 		}
 	}
 

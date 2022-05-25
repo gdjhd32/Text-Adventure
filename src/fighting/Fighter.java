@@ -9,21 +9,8 @@ public class Fighter {
 	private int maxHp; // health points
 	private double currentHp;
 	private int str; // strength
-	private int atk = 0; // attack
-	private int maxDef = 0; // defense
-	private int currentDef = maxDef;
 
 	public final String NAME;
-
-	private Position position;
-
-	public static enum Position {
-		LeftUp, MiddleUp, RightUp, LeftCenter, MiddleCenter, RightCenter, LeftDown, MiddleDown, RightDown
-	}
-
-	public static enum Direction {
-		Up, Down, Left, Right
-	}
 
 	public Fighter(String name, int str, int maxHp, int ag) {
 		NAME = name;
@@ -31,7 +18,6 @@ public class Fighter {
 		this.maxHp = maxHp;
 		currentHp = maxHp;
 		this.ag = ag;
-		setPosition(Position.MiddleCenter);
 	}
 
 	public Weapon getWeapon() {
@@ -40,7 +26,6 @@ public class Fighter {
 
 	public void setWeapon(Weapon w) {
 		weapon = w;
-		setAtk(weapon.atk());
 	}
 
 	public Armor getArmor() {
@@ -49,8 +34,6 @@ public class Fighter {
 
 	public void setArmor(Armor a) {
 		armor = a;
-		maxDef = armor.def();
-		currentDef = maxDef;
 	}
 
 	public int getMaxHp() {
@@ -83,34 +66,6 @@ public class Fighter {
 
 	public void setStr(int str) {
 		this.str = str;
-	}
-
-	public Position getPosition() {
-		return position;
-	}
-
-	public void setPosition(Position position) {
-		this.position = position;
-	}
-
-	public int getMaxDef() {
-		return maxDef;
-	}
-	
-	public int getCurrentDef() {
-		return currentDef;
-	}
-
-	public void setCurrentDef(int def) {
-		this.currentDef = def;
-	}
-
-	public int getAtk() {
-		return atk;
-	}
-
-	public void setAtk(int atk) {
-		this.atk = atk;
 	}
 
 }

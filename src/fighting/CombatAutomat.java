@@ -51,10 +51,10 @@ public class CombatAutomat {
 		if(currentSituation.damageMultiplier != 0) {
 			double damage;
 			if(currentSituation.isPlayerHit) {
-				damage = player.getCurrentHp() - enemy.getStr() * enemy.getWeapon().atk() * player.getArmor().def() * player.getCurrentDef() * currentSituation.damageMultiplier;
+				damage = player.getCurrentHp() - enemy.getStr() * enemy.getWeapon().atk() * player.getArmor().getCurrentDef() * currentSituation.damageMultiplier;
 				player.setCurrentHp(damage);
 			} else {
-				damage = enemy.getCurrentHp() - player.getStr() * player.getWeapon().atk() * enemy.getArmor().def() * enemy.getCurrentDef() * currentSituation.damageMultiplier;
+				damage = enemy.getCurrentHp() - player.getStr() * player.getWeapon().atk() * enemy.getArmor().getCurrentDef() * currentSituation.damageMultiplier;
 				enemy.setCurrentHp(damage);
 			}
 			
