@@ -3,6 +3,7 @@ package main;
 import fighting.Armor;
 import fighting.CombatAutomat;
 import fighting.Fighter;
+import fighting.Timer;
 import fighting.Weapon;
 import gui.Render;
 
@@ -19,7 +20,7 @@ public class Main {
 	private CombatAutomat fightingField;
 
 	public Main() {
-		player = new Fighter("X", 1, 1, 1);
+		player = new Fighter("X", 1, 10, 1);
 
     player.setWeapon(new Weapon("Wooden Sword", 2, "Broadsword"));
 		player.setArmor(new Armor("Leather Armor", 2, "Leather"));
@@ -38,8 +39,13 @@ public class Main {
 		fightingField = new CombatAutomat(player, enemy, render);
 	}
 
+	/**
+	 * Only for the player input.
+	 * 
+	 * @param key
+	 */
 	public void keyPressed(String key) {
-		fightingField.keyPressed(key);
+		fightingField.keyPressed(key, true);
 	}
 
 	public Fighter getPlayer() {
