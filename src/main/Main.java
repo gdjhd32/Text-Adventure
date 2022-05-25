@@ -20,10 +20,12 @@ public class Main {
 
 	public Main() {
 		player = new Fighter("X", 1, 1, 1);
-		player.setWeapon(new Weapon("Wooden Sword", 2, "Broadsword"));
+
+    player.setWeapon(new Weapon("Wooden Sword", 2, "Broadsword"));
 		player.setArmor(new Armor("Leather Armor", 2, "Leather"));
 		
 		enemy = new Fighter("Skeleton Soldier", 2, 2, 2);
+
 		enemy.setWeapon(new Weapon("Bone Sword", 2, "Broadsword"));
 		enemy.setArmor(new Armor("Iron Armor", 2, "Iron"));
 		

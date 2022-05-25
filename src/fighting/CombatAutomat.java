@@ -219,6 +219,7 @@ public class CombatAutomat {
 	
 	private record CombatSituation(String description, String name, double damageMultiplier, boolean isPlayerHit, String deathMessage, CombatAction[] pActions, CombatAction[] eActions) {}
 	
+	@SuppressWarnings("unused")
 	private class CombatAction {
 		
 		public String key;
