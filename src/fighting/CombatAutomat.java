@@ -2,7 +2,6 @@ package fighting;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -30,7 +29,6 @@ public class CombatAutomat {
 	 * @param file The file that will be used to create the CombatAutomat.
 	 * @throws FileNotFoundException If the handed over File was not found.
 	 */
-	@SuppressWarnings("unused")
 	private void createAutomat(File file) throws FileNotFoundException {
 		Scanner scanner = new Scanner(file);
 
@@ -163,6 +161,7 @@ public class CombatAutomat {
 	
 	private record CombatSituation(String description, String name, double damageMultiplier, double damage, boolean isPlayerHit, CombatAction[] pActions, CombatAction[] eActions) {}
 	
+	@SuppressWarnings("unused")
 	private class CombatAction {
 		
 		public String key;
