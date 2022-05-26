@@ -12,6 +12,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
+import fighting.Fighter;
 import main.Main;
 
 @SuppressWarnings("serial")
@@ -28,11 +29,16 @@ public class Render extends JFrame {
 	private Label enemyHP, enemyStr, enemyAg, enemyWeapon, enemyAtk, enemyArmor, enemyDef;
 	private final Main PARENT;
 
-	public Render(Main parent, String[] validKeys) {
+	private final Fighter PLAYER;
+	private Fighter enemy;
+
+	public Render(Main parent, String[] validKeys, Fighter player, Fighter emptyEnemy) {
 		super("Text-Adventure");
 		VALID_KEYS = validKeys;
 		isPressed = new boolean[VALID_KEYS.length];
 		PARENT = parent;
+		PLAYER = player;
+		enemy = emptyEnemy;
 		initWindow();
 	}
 
@@ -76,26 +82,26 @@ public class Render extends JFrame {
 				rightSideSize = getWidth() - (leftSideSize + textAreaWidth - 10);
 		Color labelColor = new Color(26, 183, 189), backgroundColor = new Color(5, 5, 5);
 
-		playerName = new Label(PARENT.getPlayer().NAME);
+		playerName = new Label(PLAYER.NAME);
 		playerName.setBounds(0, 0, leftSideSize + 2, 20);
 		playerName.setBackground(backgroundColor);
 		playerName.setForeground(labelColor);
 		playerName.setAlignment(Label.CENTER);
 		add(playerName);
 
-		playerHP = new Label("HP: " + PARENT.getPlayer().getCurrentHp() + " / " + PARENT.getPlayer().getMaxHp());
+		playerHP = new Label("HP: " + PLAYER.getCurrentHp() + " / " + PLAYER.getMaxHp());
 		playerHP.setBounds(0, 20, leftSideSize + 2, 20);
 		playerHP.setBackground(backgroundColor);
 		playerHP.setForeground(labelColor);
 		add(playerHP);
 
-		playerStr = new Label("STR: " + PARENT.getPlayer().getStr());
+		playerStr = new Label("STR: " + PLAYER.getStr());
 		playerStr.setBounds(0, 40, leftSideSize + 2, 20);
 		playerStr.setBackground(backgroundColor);
 		playerStr.setForeground(labelColor);
 		add(playerStr);
 
-		playerAg = new Label("AG: " + PARENT.getPlayer().getAg());
+		playerAg = new Label("AG: " + PLAYER.getAg());
 		playerAg.setBounds(0, 60, leftSideSize + 2, 20);
 		playerAg.setBackground(backgroundColor);
 		playerAg.setForeground(labelColor);
@@ -107,7 +113,7 @@ public class Render extends JFrame {
 		playerWeapon.setForeground(labelColor);
 		add(playerWeapon);
 
-		playerAtk = new Label("ATK: " + PARENT.getPlayer().getWeapon().atk());
+		playerAtk = new Label("ATK: " + PLAYER.getWeapon().atk());
 		playerAtk.setBounds(0, 100, leftSideSize + 2, 20);
 		playerAtk.setBackground(backgroundColor);
 		playerAtk.setForeground(labelColor);
@@ -119,7 +125,7 @@ public class Render extends JFrame {
 		playerArmor.setForeground(labelColor);
 		add(playerArmor);
 
-		playerDef = new Label("DEF: " + PARENT.getPlayer().getArmor().getCurrentDef() + " / " + PARENT.getPlayer().getArmor().getMaxDef());
+		playerDef = new Label("DEF: " + PLAYER.getArmor().getCurrentDef() + " / " + PLAYER.getArmor().getMaxDef());
 		playerDef.setBounds(0, 140, leftSideSize + 2, 20);
 		playerDef.setBackground(backgroundColor);
 		playerDef.setForeground(labelColor);
@@ -131,53 +137,62 @@ public class Render extends JFrame {
 		backgroundLeft.setFocusable(false);
 		add(backgroundLeft);
 
-		enemyName = new Label(PARENT.getEnemy().NAME);
+		enemyName = new Label(enemy.NAME);
 		enemyName.setBounds(leftSideSize + textAreaWidth - 26, 0, rightSideSize, 20);
 		enemyName.setBackground(backgroundColor);
 		enemyName.setForeground(labelColor);
 		enemyName.setAlignment(Label.CENTER);
+		enemyName.setVisible(false);
 		add(enemyName);
 
-		enemyHP = new Label("HP: " + PARENT.getEnemy().getCurrentHp() + " / " + PARENT.getEnemy().getMaxHp());
+		enemyHP = new Label("HP: " + enemy.getCurrentHp() + " / " + enemy.getMaxHp());
 		enemyHP.setBounds(leftSideSize + textAreaWidth - 26, 20, rightSideSize, 20);
 		enemyHP.setBackground(backgroundColor);
 		enemyHP.setForeground(labelColor);
+		enemyHP.setVisible(false);
 		add(enemyHP);
 
-		enemyStr = new Label("STR: " + PARENT.getEnemy().getStr());
+		enemyStr = new Label("STR: " + enemy.getStr());
 		enemyStr.setBounds(leftSideSize + textAreaWidth - 26, 40, rightSideSize, 20);
 		enemyStr.setBackground(backgroundColor);
 		enemyStr.setForeground(labelColor);
+		enemyStr.setVisible(false);
 		add(enemyStr);
 
-		enemyAg = new Label("AG: " + PARENT.getEnemy().getAg());
+		enemyAg = new Label("AG: " + enemy.getAg());
 		enemyAg.setBounds(leftSideSize + textAreaWidth - 26, 60, rightSideSize, 20);
 		enemyAg.setBackground(backgroundColor);
 		enemyAg.setForeground(labelColor);
+		enemyAg.setVisible(false);
 		add(enemyAg);
 
 		enemyWeapon = new Label("Weapon: None");
 		enemyWeapon.setBounds(leftSideSize + textAreaWidth - 26, 80, rightSideSize, 20);
 		enemyWeapon.setBackground(backgroundColor);
 		enemyWeapon.setForeground(labelColor);
+		enemyWeapon.setVisible(false);
 		add(enemyWeapon);
 
-		enemyAtk = new Label("ATK: " + PARENT.getEnemy().getWeapon().atk());
+		enemyAtk = new Label("ATK: " + enemy.getWeapon().atk());
 		enemyAtk.setBounds(leftSideSize + textAreaWidth - 26, 100, rightSideSize, 20);
 		enemyAtk.setBackground(backgroundColor);
 		enemyAtk.setForeground(labelColor);
+		enemyAtk.setVisible(false);
 		add(enemyAtk);
 
 		enemyArmor = new Label("Armor: None");
 		enemyArmor.setBounds(leftSideSize + textAreaWidth - 26, 120, rightSideSize, 20);
 		enemyArmor.setBackground(backgroundColor);
 		enemyArmor.setForeground(labelColor);
+		enemyArmor.setVisible(false);
 		add(enemyArmor);
 
-		enemyDef = new Label("DEF: " + PARENT.getEnemy().getArmor().getCurrentDef() + " / " + PARENT.getEnemy().getArmor().getMaxDef());
+		enemyDef = new Label("DEF: " + enemy.getArmor().getCurrentDef() + " / "
+				+ enemy.getArmor().getMaxDef());
 		enemyDef.setBounds(leftSideSize + textAreaWidth - 26, 140, rightSideSize, 20);
 		enemyDef.setBackground(backgroundColor);
 		enemyDef.setForeground(labelColor);
+		enemyDef.setVisible(false);
 		add(enemyDef);
 
 		backgroundRight = new Panel();
@@ -190,7 +205,7 @@ public class Render extends JFrame {
 		output.setBounds(leftSideSize, -2, textAreaWidth, getHeight() - 34);
 		output.setBackground(new Color(0, 0, 0));
 		output.setForeground(new Color(0, 255, 0));
-		output.setFont(new Font("Times New Roman", Font.ROMAN_BASELINE, 12));
+		output.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 		output.setEditable(false);
 		output.setFocusable(false);
 		add(output);
@@ -217,33 +232,67 @@ public class Render extends JFrame {
 		output.replaceRange(" " + arg, output.getText().length() - lastSectionLength, output.getText().length());
 	}
 
-	public void refreshChangeableLabel() {
-		playerHP.setText("HP: " + PARENT.getPlayer().getCurrentHp() + " / " + PARENT.getPlayer().getMaxHp());
-		playerDef.setText("DEF: " + PARENT.getPlayer().getArmor().getCurrentDef() + " / " + PARENT.getPlayer().getArmor().getMaxDef());
-		enemyHP.setText("HP: " + PARENT.getEnemy().getCurrentHp() + " / " + PARENT.getEnemy().getMaxHp());
-		enemyDef.setText("DEF: " + PARENT.getEnemy().getArmor().getCurrentDef() + " / " + PARENT.getEnemy().getArmor().getMaxDef());
+	public void refreshEnemyName() {
+		enemyName.setText(enemy.NAME);
+	}
+	
+	public void refreshStatLabel() {
+		playerHP.setText("HP: " + PLAYER.getCurrentHp() + " / " + PLAYER.getMaxHp());
+		playerStr.setText("STR: " + PLAYER.getStr());
+		playerAg.setText("AG: " + PLAYER.getAg());
+		enemyHP.setText("HP: " + enemy.getCurrentHp() + " / " + enemy.getMaxHp());
+		enemyStr.setText("STR: " + enemy.getStr());
+		enemyAg.setText("AG: " + enemy.getAg());
 	}
 
 	public void refreshWeaponLabel() {
-		if (PARENT.getPlayer().getWeapon() != null) {
-			playerWeapon.setText("Weapon: " + PARENT.getPlayer().getWeapon().name());
-			playerAtk.setText("ATK: " + PARENT.getPlayer().getWeapon().atk());
+		if (PLAYER.getWeapon() != null) {
+			playerWeapon.setText("Weapon: " + PLAYER.getWeapon().name());
+			playerAtk.setText("ATK: " + PLAYER.getWeapon().atk());
 		}
-		if (PARENT.getEnemy().getWeapon() != null) {
-			enemyWeapon.setText("Weapon: " + PARENT.getEnemy().getWeapon().name());
-			enemyAtk.setText("ATK: " + PARENT.getPlayer().getWeapon().atk());
+		if (enemy.getWeapon() != null) {
+			enemyWeapon.setText("Weapon: " + enemy.getWeapon().name());
+			enemyAtk.setText("ATK: " + PLAYER.getWeapon().atk());
 		}
 	}
 
 	public void refreshArmorLabel() {
-		if (PARENT.getPlayer().getArmor() != null) {
-			playerArmor.setText("Armor: " + PARENT.getPlayer().getArmor().getName());
-			playerDef.setText("DEF: " + PARENT.getPlayer().getArmor().getCurrentDef() + " / " + PARENT.getPlayer().getArmor().getMaxDef());
+		if (PLAYER.getArmor() != null) {
+			playerArmor.setText("Armor: " + PLAYER.getArmor().getName());
+			playerDef.setText("DEF: " + PLAYER.getArmor().getCurrentDef() + " / " + PLAYER.getArmor().getMaxDef());
 		}
-		if (PARENT.getEnemy().getArmor() != null) {
-			enemyArmor.setText("Armor: " + PARENT.getEnemy().getArmor().getName());
-			enemyDef.setText("DEF: " + PARENT.getEnemy().getArmor().getCurrentDef() + " / " + PARENT.getEnemy().getArmor().getMaxDef());
+		if (enemy.getArmor() != null) {
+			enemyArmor.setText("Armor: " + enemy.getArmor().getName());
+			enemyDef.setText("DEF: " + enemy.getArmor().getCurrentDef() + " / "
+					+ enemy.getArmor().getMaxDef());
 		}
+	}
+
+	public void startFight(Fighter enemy) {
+		this.enemy = enemy;
+		refreshEnemyName();
+		refreshStatLabel();
+		refreshWeaponLabel();
+		refreshArmorLabel();
+		enemyName.setVisible(true);
+		enemyHP.setVisible(true);
+		enemyStr.setVisible(true);
+		enemyAg.setVisible(true);
+		enemyWeapon.setVisible(true);
+		enemyAtk.setVisible(true);
+		enemyArmor.setVisible(true);
+		enemyDef.setVisible(true);
+	}
+
+	public void endFight() {
+		enemyName.setVisible(false);
+		enemyHP.setVisible(false);
+		enemyStr.setVisible(false);
+		enemyAg.setVisible(false);
+		enemyWeapon.setVisible(false);
+		enemyAtk.setVisible(false);
+		enemyArmor.setVisible(false);
+		enemyDef.setVisible(false);
 	}
 
 }
