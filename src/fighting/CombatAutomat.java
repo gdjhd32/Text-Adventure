@@ -89,7 +89,7 @@ public class CombatAutomat {
 
 		// output
 		render.println(output);
-		render.refreshChangeableLabel();
+		render.refreshStatLabel();
 
 		pTimer = new Timer(currentSituation.pActions(), null, true);
 		eTimer = new Timer(currentSituation.eActions(), pTimer, false);
@@ -257,7 +257,7 @@ public class CombatAutomat {
 	private File getAutomatType(Fighter player, Fighter enemy) {
 		// BroadswordVsBroadsword
 		if (player.getWeapon().type().equals(enemy.getWeapon().type())) {
-			return new File("CombatAutomaten/BroadswordVsBroadsword.txt");
+			return new File("assets/CombatAutomaten/BroadswordVsBroadsword.txt");
 		}
 
 		// temporary
