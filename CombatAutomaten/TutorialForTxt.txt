@@ -15,7 +15,7 @@ PDMG hand;
 // When, in case the player or enemy dies in that situation, a different death message should be printed,
 // this death message should be added at the end of the DMG statement in angled brackets
 PDMG head <You died from fire.>
-// Times in seconds
+// Times in seconds and for every agility level are 1% more time added to thi
 // To write down informations for the keys:
 PJ 2 P_Hitting_To_The_Head;
 // player/enemy+key timeToPress nameOFNext
@@ -26,3 +26,6 @@ PJ 2 P_Hitting_To_The_Head;
 // the path will be taken, when all other timers have run out
 _ Initial_Position;
 // please remember to have at least one timer from the enemy and the player to end at the longest time, so nobody has at any point no option
+//
+// There must exist, for every combination of weapons, exactly one CombatAutomat
+// The right addressing of the player and the enemy has to be handled in the AutomatCreator

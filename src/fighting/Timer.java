@@ -1,6 +1,7 @@
 package fighting;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 public class Timer extends Thread {
 
@@ -36,11 +37,19 @@ public class Timer extends Thread {
 	@Override
 	public void run() {
 		try {
+			if(!isPlayer) {
+				double timeToWait = (Math.random() + 0.5) * 5 * 1000;
+			
+			}
+			
+			int sleptTime = 0;
 			while (!timer.isEmpty()) {
 				TimerObject[] currentTimer = shortestTimer();
 				System.out.println(
 						"isPlayer: " + isPlayer + ": I will sleep for " + currentTimer[0].timerLength() + " seconds. Renmaining timer: " + timer.size());
-				this.sleep(currentTimer[0].timerLength());
+				int timeToSleep = currentTimer[0].timerLength() - sleptTime;
+				this.sleep(timeToSleep);
+				sleptTime += timeToSleep;
 				for (int i = 0; i < currentTimer.length; i++) {
 					currentTimer[i].timerEnd();
 				}

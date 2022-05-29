@@ -187,7 +187,6 @@ public class CombatAutomat {
 							public void timerEnd() {
 								isTimerActive = false;
 								changeSituation(this.nextSituation);
-								System.out.println("------------------------------------");
 							}
 						};
 
