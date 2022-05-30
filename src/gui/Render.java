@@ -213,23 +213,23 @@ public class Render extends JFrame {
 
 	public void println(String arg) {
 		if (output.getText().length() == 0) {
-			output.append(" " + arg);
+			output.append(arg);
 			return;
 		}
-		output.append("\n " + arg);
+		output.append("\n" + arg);
 	}
 
 	public void changeLast(String arg) {
 		if (output.getText().length() == 0) {
-			output.append(" " + arg);
+			output.append(arg);
 			return;
 		}
 		int lastSectionLength = output.getText().split("\n")[output.getText().split("\n").length - 1].length();
 		if (output.getText().length() == lastSectionLength) {
-			output.setText(" " + arg);
+			output.setText(arg);
 			return;
 		}
-		output.replaceRange(" " + arg, output.getText().length() - lastSectionLength, output.getText().length());
+		output.replaceRange(arg, output.getText().length() - lastSectionLength, output.getText().length());
 	}
 
 	public void refreshEnemyName() {
