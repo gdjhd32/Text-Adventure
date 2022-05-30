@@ -45,7 +45,7 @@ public class CombatAutomat {
 				break;
 			}
 		}
-		
+
 	}
 
 	private void changeSituation(CombatSituation newSituation) {
@@ -63,16 +63,20 @@ public class CombatAutomat {
 
 		String output = currentSituation.description();
 
-		// damage calculation
+		// damage calculation : (STR * ATK * DMG-multiplier) - enemy DEF; < 0 -> DMG = 0
 		if (currentSituation.damageMultiplier != 0) {
 			double damage;
 			if (currentSituation.isPlayerHit) {
-				damage = enemy.getStr() * enemy.getWeapon().atk() * player.getArmor().getCurrentDef()
-						* currentSituation.damageMultiplier;
+				damage = (int) (enemy.getStr() * enemy.getWeapon().atk() * currentSituation.damageMultiplier)
+						- player.getArmor().getCurrentDef() < 0 ? 0
+								: (enemy.getStr() * enemy.getWeapon().atk() * currentSituation.damageMultiplier)
+										- player.getArmor().getCurrentDef();
 				player.setCurrentHp(player.getCurrentHp() - damage);
 			} else {
-				damage = player.getStr() * player.getWeapon().atk() * enemy.getArmor().getCurrentDef()
-						* currentSituation.damageMultiplier;
+				damage = (int) (player.getStr() * player.getWeapon().atk() * currentSituation.damageMultiplier)
+						- enemy.getArmor().getCurrentDef() < 0 ? 0
+								: (player.getStr() * player.getWeapon().atk() * currentSituation.damageMultiplier)
+										- enemy.getArmor().getCurrentDef();
 				enemy.setCurrentHp(enemy.getCurrentHp() - damage);
 			}
 

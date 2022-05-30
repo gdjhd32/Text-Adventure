@@ -1,4 +1,4 @@
-hand 0.1; head 2; swing 1.5;
+hand 1; head 2; swing 1.5;
 Initial_Position; PW 0 Move_Forward_Ini; PS 0 Move_Back_Ini; PL 2 Strike_Enemy; You face the enemy.
 //
 Move_Forward_Ini; _ P_Position_Front; You move forward.

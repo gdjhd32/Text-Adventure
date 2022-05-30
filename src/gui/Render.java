@@ -187,8 +187,7 @@ public class Render extends JFrame {
 		enemyArmor.setVisible(false);
 		add(enemyArmor);
 
-		enemyDef = new Label("DEF: " + enemy.getArmor().getCurrentDef() + " / "
-				+ enemy.getArmor().getMaxDef());
+		enemyDef = new Label("DEF: " + enemy.getArmor().getCurrentDef() + " / " + enemy.getArmor().getMaxDef());
 		enemyDef.setBounds(leftSideSize + textAreaWidth - 26, 140, rightSideSize, 20);
 		enemyDef.setBackground(backgroundColor);
 		enemyDef.setForeground(labelColor);
@@ -235,7 +234,7 @@ public class Render extends JFrame {
 	public void refreshEnemyName() {
 		enemyName.setText(enemy.NAME);
 	}
-	
+
 	public void refreshStatLabel() {
 		playerHP.setText("HP: " + PLAYER.getCurrentHp() + " / " + PLAYER.getMaxHp());
 		playerStr.setText("STR: " + PLAYER.getStr());
@@ -263,8 +262,7 @@ public class Render extends JFrame {
 		}
 		if (enemy.getArmor() != null) {
 			enemyArmor.setText("Armor: " + enemy.getArmor().getName());
-			enemyDef.setText("DEF: " + enemy.getArmor().getCurrentDef() + " / "
-					+ enemy.getArmor().getMaxDef());
+			enemyDef.setText("DEF: " + enemy.getArmor().getCurrentDef() + " / " + enemy.getArmor().getMaxDef());
 		}
 	}
 
