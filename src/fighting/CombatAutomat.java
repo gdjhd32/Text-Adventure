@@ -9,9 +9,6 @@ import gui.Render;
 
 public class CombatAutomat {
 
-	private Timer pTimer;
-	private Timer eTimer;
-
 	private final Render render;
 	private final Fighter enemy, player;
 
@@ -50,16 +47,13 @@ public class CombatAutomat {
 
 	private void changeSituation(CombatSituation newSituation) {
 		currentSituation = newSituation;
-
-		if (pTimer != null)
-			pTimer.interrupt();
-
+		
 		CombatAction[] actions = currentSituation.pActions();
 		for (int i = 0; i < actions.length; i++) {
 			actions[i].isTimerActive = true;
 		}
 
-		System.out.println(currentSituation.name + ": " + currentSituation.deathMessage());
+//		System.out.println(currentSituation.name + ": " + currentSituation.deathMessage());
 
 		String output = currentSituation.description();
 
@@ -95,11 +89,6 @@ public class CombatAutomat {
 		render.println(output);
 		render.refreshStatLabel();
 
-		pTimer = new Timer(currentSituation.pActions(), null, true);
-		eTimer = new Timer(currentSituation.eActions(), pTimer, false);
-		pTimer.setOtherTimer(eTimer);
-		pTimer.start();
-		eTimer.start();
 	}
 
 	/**
@@ -187,11 +176,11 @@ public class CombatAutomat {
 					if (section[0].charAt(0) == '_') {
 
 						combatAction = new CombatAction() {
-							@Override
-							public void timerEnd() {
-								isTimerActive = false;
-								changeSituation(this.nextSituation);
-							}
+//							@Override
+//							public void timerEnd() {
+//								isTimerActive = false;
+//								changeSituation(this.nextSituation);
+//							}
 						};
 
 						if (section.length == 3) {
@@ -208,10 +197,9 @@ public class CombatAutomat {
 						continue;
 					} else
 						combatAction = new CombatAction() {
-							@Override
-							public void timerEnd() {
-								isTimerActive = false;
-							}
+//							public void timerEnd() {
+//								isTimerActive = false;
+//							}
 						};
 
 					combatAction.key = section[0].substring(1).toLowerCase();
@@ -273,7 +261,7 @@ public class CombatAutomat {
 			String deathMessage, CombatAction[] pActions, CombatAction[] eActions) {
 	}
 
-	public abstract class CombatAction implements TimerObject {
+	public abstract class CombatAction {
 
 		public String key;
 
@@ -282,11 +270,5 @@ public class CombatAutomat {
 		public CombatSituation nextSituation;
 
 		private String nextSituationName; // for one time use
-
-		@Override
-		public int timerLength() {
-			return maximumReactionTime;
-		}
-
 	}
 }

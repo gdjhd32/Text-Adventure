@@ -22,9 +22,14 @@ public class Dungeon {
 		PARENT = parent;
 		RENDER = render;
 		dungeon = readDungeon(new File("assets/Dungeon/Dungeon000.txt"));
+<<<<<<< HEAD
 		currentRoom = dungeon[0];
 		currentRoom.roomEntered();
 		RENDER.println(currentRoom.FIRST_DECRIPTION);
+=======
+		currentRoom = dungeon[0];
+		changeRoom(Direction.North);
+>>>>>>> branch 'main' of https://github.com/gdjhd32/Text-Adventure
 	}
 
 	private void changeRoom(Direction dir) {
