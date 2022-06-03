@@ -89,6 +89,14 @@ public class CombatAutomat {
 		render.println(output);
 		render.refreshStatLabel();
 
+		//temporary 
+		for(int i = 0; i < currentSituation.pActions.length; i++) {
+			if(currentSituation.pActions[i].key.equals("_")) {
+				changeSituation(currentSituation.pActions[i].nextSituation);
+				return;
+			}
+		}
+		
 	}
 
 	/**
@@ -190,8 +198,9 @@ public class CombatAutomat {
 							combatAction.maximumReactionTime = -1;
 							combatAction.nextSituationName = section[1];
 						}
+						combatAction.key = "_";
 
-						// it has to be added to both
+						// has be changed
 						pCombatActions.add(combatAction);
 						eCombatActions.add(combatAction);
 						continue;

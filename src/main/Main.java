@@ -48,8 +48,10 @@ public class Main {
 	 * @param key
 	 */
 	public void keyPressed(String key) {
-		if (render.isFighting())
+		if (render.isFighting()) {
 			fightingField.keyPressed(key, true);
+			return;
+		}
 		dungeon.keyPressed(key);
 	}
 
