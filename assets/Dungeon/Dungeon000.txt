@@ -1,5 +1,8 @@
 //Convention:
 //RoomID; FirstRoomDescription; GeneralRoomDescription; RoomType; [RoomLoot]; RoomEnemy; [RoomNorth, RoomSouth, RoomWest, RoomEast]
 //RoomType: What room it is: enemy, loot, etc.
-000; A dark room with glowing moss that creates a dim light.; null; Empty; [null]; null; [001, null, null, null]
-001; A skeleton soldier awaits you.; A small room decorated with bones of the brave skeleton Tom.; Fight; [null]; Tom, the Skeleton Soldier; [null, null, null, null]
+000; A dark room with glowing moss that creates a dim light.; null; Empty; [null]; null; [001, 002, 003, 004]
+001; A skeleton soldier awaits you.; A small room decorated with bones of the brave skeleton Tom.; Fight; [null]; Tom, the Skeleton Soldier; [null, 000, null, null]
+002; A dark chamber without anything interesting in it.; null; Empty; [null]; null; [000, null, null, null]
+003; Except of a few insects that are moving along the walls is the room empty.; null; Empty; [null]; null; [null, null, null, 000]
+004; A lit torch stands in the middle of the room and the ground is almost not visible with all the human bones that are lying around.; null; Empty; [null]; null; [null, null, 000, null]

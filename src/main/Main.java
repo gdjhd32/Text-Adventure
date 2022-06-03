@@ -48,7 +48,9 @@ public class Main {
 	 * @param key
 	 */
 	public void keyPressed(String key) {
-		fightingField.keyPressed(key, true);
+		if (render.isFighting())
+			fightingField.keyPressed(key, true);
+		dungeon.keyPressed(key);
 	}
 
 	public Fighter getPlayer() {

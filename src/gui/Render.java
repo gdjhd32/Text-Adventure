@@ -31,6 +31,7 @@ public class Render extends JFrame {
 
 	private final Fighter PLAYER;
 	private Fighter enemy;
+	private boolean fighting;
 
 	public Render(Main parent, String[] validKeys, Fighter player, Fighter emptyEnemy) {
 		super("Text-Adventure");
@@ -39,6 +40,7 @@ public class Render extends JFrame {
 		PARENT = parent;
 		PLAYER = player;
 		enemy = emptyEnemy;
+		fighting = false;
 		initWindow();
 	}
 
@@ -267,6 +269,7 @@ public class Render extends JFrame {
 	}
 
 	public void startFight(Fighter enemy) {
+		fighting = true;
 		this.enemy = enemy;
 		refreshEnemyName();
 		refreshStatLabel();
@@ -283,6 +286,7 @@ public class Render extends JFrame {
 	}
 
 	public void endFight() {
+		fighting = false;
 		enemyName.setVisible(false);
 		enemyHP.setVisible(false);
 		enemyStr.setVisible(false);
@@ -291,6 +295,10 @@ public class Render extends JFrame {
 		enemyAtk.setVisible(false);
 		enemyArmor.setVisible(false);
 		enemyDef.setVisible(false);
+	}
+	
+	public boolean isFighting() {
+		return fighting;
 	}
 
 }

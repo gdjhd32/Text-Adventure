@@ -25,7 +25,6 @@ public class Dungeon {
 		currentRoom = dungeon[0];
 		currentRoom.roomEntered();
 		RENDER.println(currentRoom.FIRST_DECRIPTION);
-		changeRoom(Direction.North);
 	}
 
 	private void changeRoom(Direction dir) {
@@ -63,8 +62,30 @@ public class Dungeon {
 			}
 			return;
 		}
-		if (currentRoom.GENERAL_DESCRIPTION != null)
+		if (currentRoom.GENERAL_DESCRIPTION == null) {
 			RENDER.println("You enter another room. \n" + currentRoom.FIRST_DECRIPTION);
+			return;
+		}
+		RENDER.println("You enter another room. \n" + currentRoom.GENERAL_DESCRIPTION);
+	}
+
+	public void keyPressed(String key) {
+		if (key.equals("w")) {
+			changeRoom(Direction.North);
+			return;
+		}
+		if (key.equals("a")) {
+			changeRoom(Direction.West);
+			return;
+		}
+		if (key.equals("s")) {
+			changeRoom(Direction.South);
+			return;
+		}
+		if (key.equals("d")) {
+			changeRoom(Direction.East);
+			return;
+		}
 	}
 
 	private Room[] readDungeon(File file) {
