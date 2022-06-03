@@ -1,11 +1,17 @@
 Weapons:
+//Convetion:
+//Name; ATK; Type
 Empty Weapon; 0; Empty
 Wooden Sword; 2; Broadsword
 Bone Sword; 2; Broadsword
 Armor:
+//Convention:
+//Name; DEF; Type
 Empty Armor; 0; Empty
 Leather Armor; 1; Leather
-Iron Armor; 2; Iron
+Iron Armor; 1; Iron
 Enemies:
+//Convention:
+//Name; STR; LP; AG; Weapon; Armor
 Empty Enemy; 0; 0; 0; Empty Weapon; Empty Armor
-Tom, the Skeleton Soldier; 2; 2; 2; Bone Sword; Iron Armor
+Tom, the Skeleton Soldier; 2; 10; 2; Bone Sword; Iron Armor

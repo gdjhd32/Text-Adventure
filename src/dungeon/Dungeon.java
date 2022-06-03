@@ -23,6 +23,11 @@ public class Dungeon {
 		RENDER = render;
 		dungeon = readDungeon(new File("assets/Dungeon/Dungeon000.txt"));
 		currentRoom = dungeon[0];
+<<<<<<< HEAD
+=======
+		currentRoom.roomEntered();
+		RENDER.println(currentRoom.FIRST_DECRIPTION);
+>>>>>>> branch 'main' of https://github.com/gdjhd32/Text-Adventure
 		changeRoom(Direction.North);
 	}
 
@@ -52,10 +57,17 @@ public class Dungeon {
 			RENDER.println("There is no room in this direction!");
 			return;
 		}
-		RENDER.println("You enter another room. \n " + currentRoom.DECRIPTION);
-		if (currentRoom.ENEMY != null) {
-			PARENT.initFight(currentRoom.ENEMY);
+		if (!currentRoom.isCleared()) {
+			currentRoom.roomEntered();
+			RENDER.println("You enter another room. \n" + currentRoom.FIRST_DECRIPTION);
+			if (currentRoom.ENEMY != null) {
+				System.out.println(currentRoom.ENEMY);
+				PARENT.initFight(currentRoom.ENEMY);
+			}
+			return;
 		}
+		if (currentRoom.GENERAL_DESCRIPTION != null)
+			RENDER.println("You enter another room. \n" + currentRoom.FIRST_DECRIPTION);
 	}
 
 	private Room[] readDungeon(File file) {
@@ -70,7 +82,7 @@ public class Dungeon {
 
 		int roomCount = 0;
 		while (scanner.hasNext())
-			if (!scanner.nextLine().equals("//"))
+			if (!scanner.nextLine().trim().substring(0, 2).equals("//"))
 				roomCount++;
 
 		scanner.close();
@@ -88,21 +100,22 @@ public class Dungeon {
 		String[] lineArr;
 		String line;
 		while (scanner.hasNext()) {
-			line = scanner.nextLine();
+			line = scanner.nextLine().trim();
 			if (!line.substring(0, 2).equals("//")) {
 				lineArr = line.split("; ");
-				dungeon[Integer.parseInt(lineArr[0])] = new Room(lineArr[1], lineArr[2],
-						lineArr[3].substring(1, lineArr[3].length() - 1).split(", ")[0].equals("null") ? null
-								: lineArr[3].substring(1, lineArr[3].length() - 1).split(", "),
-						lineArr[4].equals("null") ? null : lineArr[4],
-						lineArr[5].substring(1, lineArr[5].length() - 1).split(", ")[0].equals("null") ? -1
-								: Integer.parseInt(lineArr[5].substring(1, lineArr[5].length() - 1).split(", ")[0]),
-						lineArr[5].substring(1, lineArr[5].length() - 1).split(", ")[1].equals("null") ? -1
-								: Integer.parseInt(lineArr[5].substring(1, lineArr[5].length() - 1).split(", ")[1]),
-						lineArr[5].substring(1, lineArr[5].length() - 1).split(", ")[2].equals("null") ? -1
-								: Integer.parseInt(lineArr[5].substring(1, lineArr[5].length() - 1).split(", ")[2]),
-						lineArr[5].substring(1, lineArr[5].length() - 1).split(", ")[3].equals("null") ? -1
-								: Integer.parseInt(lineArr[5].substring(1, lineArr[5].length() - 1).split(", ")[3]));
+				dungeon[Integer.parseInt(lineArr[0])] = new Room(lineArr[1],
+						lineArr[2].equals("null") ? null : lineArr[2], lineArr[3],
+						lineArr[4].substring(1, lineArr[4].length() - 1).split(", ")[0].equals("null") ? null
+								: lineArr[4].substring(1, lineArr[4].length() - 1).split(", "),
+						lineArr[5].equals("null") ? null : lineArr[5],
+						lineArr[6].substring(1, lineArr[6].length() - 1).split(", ")[0].equals("null") ? -1
+								: Integer.parseInt(lineArr[6].substring(1, lineArr[6].length() - 1).split(", ")[0]),
+						lineArr[6].substring(1, lineArr[6].length() - 1).split(", ")[1].equals("null") ? -1
+								: Integer.parseInt(lineArr[6].substring(1, lineArr[6].length() - 1).split(", ")[1]),
+						lineArr[6].substring(1, lineArr[6].length() - 1).split(", ")[2].equals("null") ? -1
+								: Integer.parseInt(lineArr[6].substring(1, lineArr[6].length() - 1).split(", ")[2]),
+						lineArr[6].substring(1, lineArr[6].length() - 1).split(", ")[3].equals("null") ? -1
+								: Integer.parseInt(lineArr[6].substring(1, lineArr[6].length() - 1).split(", ")[3]));
 			}
 		}
 
@@ -112,14 +125,16 @@ public class Dungeon {
 
 	public class Room {
 
-		public final String DECRIPTION, TYPE;
+		public final String FIRST_DECRIPTION, GENERAL_DESCRIPTION, TYPE;
 		public final String[] LOOT;
 		public final String ENEMY;
 		public final int[] NEXT_ROOMS = new int[4];
+		private boolean cleared = false;
 
-		public Room(String description, String type, String[] loot, String enemy, int roomNorth, int roomSouth,
-				int roomWest, int roomEast) {
-			DECRIPTION = description;
+		public Room(String firstDescription, String generalDescription, String type, String[] loot, String enemy,
+				int roomNorth, int roomSouth, int roomWest, int roomEast) {
+			FIRST_DECRIPTION = firstDescription;
+			GENERAL_DESCRIPTION = generalDescription;
 			TYPE = type;
 			LOOT = loot;
 			ENEMY = enemy;
@@ -127,6 +142,14 @@ public class Dungeon {
 			NEXT_ROOMS[1] = roomSouth;
 			NEXT_ROOMS[2] = roomWest;
 			NEXT_ROOMS[3] = roomEast;
+		}
+
+		public void roomEntered() {
+			cleared = true;
+		}
+
+		public boolean isCleared() {
+			return cleared;
 		}
 
 	}
