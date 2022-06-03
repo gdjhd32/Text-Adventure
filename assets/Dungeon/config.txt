@@ -2,8 +2,9 @@ Weapons:
 //Convetion:
 //Name; ATK; Type
 Empty Weapon; 0; Empty
-Wooden Sword; 2; Broadsword
+Wooden Sword; 1; Broadsword
 Bone Sword; 2; Broadsword
+Tmp Sword; 3; Broadsword
 Armor:
 //Convention:
 //Name; DEF; Type

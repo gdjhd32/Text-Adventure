@@ -8,6 +8,7 @@ import dungeon.Dungeon;
 import fighting.Armor;
 import fighting.CombatAutomat;
 import fighting.Fighter;
+import fighting.Inventory;
 import fighting.Weapon;
 import gui.Render;
 
@@ -17,26 +18,36 @@ public class Main {
 		new Main();
 	}
 
-	private String[] VALID_KEYS = { "w", "a", "s", "d", "i", "j", "k", "l", " " };
+	private String[] VALID_KEYS = { "w", "a", "s", "d", "i", "j", "k", "l", " " , "e", "\n"};
 
 	private final Render render;
 	private Fighter player;
 	private CombatAutomat fightingField;
-	@SuppressWarnings("unused")
 	private Dungeon dungeon;
 
 	private Weapon[] weapons;
 	private Armor[] armor;
 	private Fighter[] enemies;
 
+	private final Inventory INVENTORY;
+
 	public Main() {
 		readAssets(new File("assets/Dungeon/config.txt"));
 
-		player = new Fighter("X", 1, 10, 1);
-		player.setWeapon(new Weapon("Wooden Sword", 2, "Broadsword"));
-		player.setArmor(new Armor("Leather Armor", 2, "Leather"));
+		INVENTORY = new Inventory();
+		for (int i = 0; i < 20; i++) {
+			INVENTORY.addWeapon(getWeapon("Wooden Sword"));
+			INVENTORY.addWeapon(getWeapon("Bone Sword"));
+		}
+		INVENTORY.addArmor(getArmor("Leather Armor"));
 
-		render = new Render(this, VALID_KEYS, player, enemies[0]);
+		player = new Fighter("X", 1, 10, 1);
+		player.setWeapon(INVENTORY.getWeapon(0));
+		player.setArmor(INVENTORY.getArmor(0));
+
+		render = new Render(this, VALID_KEYS, player, enemies[0], INVENTORY);
+		render.refreshArmorLabel();
+		render.refreshWeaponLabel();
 		render.println("Welcome to our small game!");
 		dungeon = new Dungeon(this, render);
 
@@ -52,9 +63,34 @@ public class Main {
 			fightingField.keyPressed(key, true);
 			return;
 		}
+		if (key.equals("e") && !render.isInventoryOpen()) {
+			render.openInventory();
+			return;
+		}
+		if (render.isInventoryOpen()) {
+			if (key.equals("e")) {
+				render.closeInventory();
+			}
+			render.inventoryControll(key);
+			return;
+		}
 		dungeon.keyPressed(key);
 	}
 
+	public Weapon getWeapon(String name) {
+		for (int i = 0; i < weapons.length; i++) 
+			if (weapons[i].name().equals(name))
+				return weapons[i];
+		return null;
+	}
+	
+	public Armor getArmor(String name) {
+		for (int i = 0; i < armor.length; i++)
+			if (armor[i].getName().equals(name))
+				return armor[i];
+		return null;
+	}
+	
 	public Fighter getPlayer() {
 		return player;
 	}
