@@ -1,5 +1,13 @@
-hand 0.5; head 2; swing 1.5;
-Initial_Position; PW 2 Move_Forward_Ini; PS 0 Get_Hit_Hand; Hello, you are under attack.
-//Hello
-Move_Forward_Ini; PS 2 Initial_Position; _ Get_Hit_Hand; You move forward.
+hand 0.1; head 2; swing 1.5;
+Initial_Position; PW 0 Move_Forward_Ini; PL 0 Strike_Enemy; You face the enemy.
+//
+Move_Forward_Ini; _ P_Position_Front; You move forward.
+P_Position_Front; PS 0 Move_Backwards_Front; _ 3 Get_Hit_Hand; You are very close to the enemy.
+Move_Backwards_Front; _ Initial_Position; You move backwards.
+//
+Strike_Enemy; EDMG hand; _ Initial_Position; You swing your sword with your right hand and strike the enemy, dealing <DMG> damage;
 Get_Hit_Hand; PDMG hand <You took <DMG> damage and died.>; _ Initial_Position; The enemy strikes you at your hand and deals <DMG> damage.
+//back
+Move_Back_Ini; _ P_Position_Back; You move backwards.
+P_Postion_Back; PW 0 Move_Forward_Back; You gained some distance to the enemy.
+//Move_Forward_Back; _ Initial_Position; You move forward.

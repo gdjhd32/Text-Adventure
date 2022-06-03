@@ -23,8 +23,6 @@ public class Dungeon {
 		RENDER = render;
 		dungeon = readDungeon(new File("assets/Dungeon/Dungeon000.txt"));
 		currentRoom = dungeon[0];
-		RENDER.println(currentRoom.DECRIPTION);
-		System.out.println(dungeon[0].DECRIPTION);
 		changeRoom(Direction.North);
 	}
 
