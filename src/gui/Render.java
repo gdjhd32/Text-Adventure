@@ -437,16 +437,30 @@ public class Render extends JFrame {
 			}
 			subPanelList.setVisibleSubPanel(subPanelList.get(0));
 			if (subPanelList.getVisibleSubPanel().NAME.equals("Weapons")) {
-				Weapon tmp = MAIN.getWeapon(subPanelList.getVisibleSubPanel().getCurrentItem());
-				itemName.setText("Name: " + tmp.name());
-				itemStat.setText("Atk: " + tmp.atk());
-				itemType.setText("Type: " + tmp.type());
+				Weapon tmp = subPanelList.getVisibleSubPanel().getCurrentItem() != null
+						? MAIN.getWeapon(subPanelList.getVisibleSubPanel().getCurrentItem())
+						: null;
+				itemName.setText("Name: " + "None");
+				itemStat.setText("Atk: " + "None");
+				itemType.setText("Type: " + "None");
+				if (tmp != null) {
+					itemName.setText("Name: " + tmp.name());
+					itemStat.setText("Atk: " + tmp.atk());
+					itemType.setText("Type: " + tmp.type());
+				}
 			}
 			if (subPanelList.getVisibleSubPanel().NAME.equals("Armor")) {
-				Armor tmp = MAIN.getArmor(subPanelList.getVisibleSubPanel().getCurrentItem());
-				itemName.setText("Name: " + tmp.getName());
-				itemStat.setText("Def: " + tmp.getMaxDef());
-				itemType.setText("Material: " + tmp.getType());
+				Armor tmp = subPanelList.getVisibleSubPanel().getCurrentItem() != null
+						? MAIN.getArmor(subPanelList.getVisibleSubPanel().getCurrentItem())
+						: null;
+				itemName.setText("Name: " + "None");
+				itemStat.setText("Def: " + "None");
+				itemType.setText("Material: " + "None");
+				if (tmp != null) {
+					itemName.setText("Name: " + tmp.getName());
+					itemStat.setText("Def: " + tmp.getMaxDef());
+					itemType.setText("Material: " + tmp.getType());
+				}
 			}
 			section.setText(subPanelList.get(0).NAME);
 			if (subPanelList.get(1) != null)
@@ -490,19 +504,33 @@ public class Render extends JFrame {
 		public void changeSection(int id) {
 			subPanelList.getVisibleSubPanel().hideComponents();
 			subPanelList.setVisibleSubPanel(subPanelList.get(id));
+			subPanelList.getVisibleSubPanel().showComponents();
 			if (subPanelList.getVisibleSubPanel().NAME.equals("Weapons")) {
-				Weapon tmp = MAIN.getWeapon(subPanelList.getVisibleSubPanel().getCurrentItem());
-				itemName.setText("Name: " + tmp.name());
-				itemStat.setText("Atk: " + tmp.atk());
-				itemType.setText("Type: " + tmp.type());
+				Weapon tmp = subPanelList.getVisibleSubPanel().getCurrentItem() != null
+						? MAIN.getWeapon(subPanelList.getVisibleSubPanel().getCurrentItem())
+						: null;
+				itemName.setText("Name: " + "None");
+				itemStat.setText("Atk: " + "None");
+				itemType.setText("Type: " + "None");
+				if (tmp != null) {
+					itemName.setText("Name: " + tmp.name());
+					itemStat.setText("Atk: " + tmp.atk());
+					itemType.setText("Type: " + tmp.type());
+				}
 			}
 			if (subPanelList.getVisibleSubPanel().NAME.equals("Armor")) {
-				Armor tmp = MAIN.getArmor(subPanelList.getVisibleSubPanel().getCurrentItem());
-				itemName.setText("Name: " + tmp.getName());
-				itemStat.setText("Def: " + tmp.getMaxDef());
-				itemType.setText("Material: " + tmp.getType());
+				Armor tmp = subPanelList.getVisibleSubPanel().getCurrentItem() != null
+						? MAIN.getArmor(subPanelList.getVisibleSubPanel().getCurrentItem())
+						: null;
+				itemName.setText("Name: " + "None");
+				itemStat.setText("Def: " + "None");
+				itemType.setText("Material: " + "None");
+				if (tmp != null) {
+					itemName.setText("Name: " + tmp.getName());
+					itemStat.setText("Def: " + tmp.getMaxDef());
+					itemType.setText("Material: " + tmp.getType());
+				}
 			}
-			subPanelList.getVisibleSubPanel().showComponents();
 			section.setText(subPanelList.getVisibleSubPanel().NAME);
 			if (subPanelList.getVisibleSubPanel().getNext() != null)
 				section.setText(section.getText() + " ->");
@@ -549,7 +577,7 @@ public class Render extends JFrame {
 				}
 			}
 
-			public void setVisibleSubPanel(SubPanelElement spe) {
+			private void setVisibleSubPanel(SubPanelElement spe) {
 				visibleSubPanel = spe;
 			}
 
@@ -563,7 +591,7 @@ public class Render extends JFrame {
 				public final ItemType TYPE;
 				public final int ID;
 				private SubPanelElement next, previous;
-				private Label[] labels;
+				private LabelList labels;
 				private int currentLabel;
 				private final Panel PARENT;
 				private final Render RENDER;
@@ -577,75 +605,155 @@ public class Render extends JFrame {
 					previous = null;
 					PARENT = parent;
 					RENDER = render;
+					labels = new LabelList(RENDER);
 					initComponents();
 				}
 
 				private void initComponents() {
 					currentLabel = 0;
-					int length = 0;
+					int i = 0;
 					if (TYPE.equals(ItemType.Weapon)) {
-						while (INVENTORY.getWeapon(length) != null) {
-							length++;
-						}
-						labels = new Label[length];
-						for (int i = 0; i < labels.length; i++) {
-							labels[i] = new Label(INVENTORY.getWeapon(i).name());
-							labels[i].setBounds(PARENT.getX() + 5, PARENT.getY() + 30 + i * (12 + 5), PARENT.getWidth(),
+						Label tmpLabel = null;
+						while (INVENTORY.getWeapon(i) != null) {
+							tmpLabel = new Label(INVENTORY.getWeapon(i).name());
+							tmpLabel.setBounds(PARENT.getX() + 5, PARENT.getY() + 30 + i * (12 + 5), PARENT.getWidth(),
 									12);
-							labels[i].setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-							labels[i].setBackground(new Color(0, 0, 0));
-							labels[i].setForeground(UNACTIVE);
-							labels[i].setFocusable(false);
-							labels[i].setVisible(false);
-							RENDER.add(labels[i]);
+							tmpLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+							tmpLabel.setBackground(new Color(0, 0, 0));
+							tmpLabel.setForeground(UNACTIVE);
+							tmpLabel.setFocusable(false);
+							tmpLabel.setVisible(false);
+							labels.add(tmpLabel);
+							i++;
 						}
 						return;
 					}
 					if (TYPE.equals(ItemType.Armor)) {
-						while (INVENTORY.getArmor(length) != null) {
-							length++;
-						}
-						labels = new Label[length];
-						for (int i = 0; i < labels.length; i++) {
-							labels[i] = new Label(INVENTORY.getArmor(i).getName());
-							labels[i].setBounds(PARENT.getX() + 5, PARENT.getY() + 30 + i * (12 + 5), PARENT.getWidth(),
+						Label tmpLabel = null;
+						while (INVENTORY.getArmor(i) != null) {
+							tmpLabel = new Label(INVENTORY.getArmor(i).getName());
+							tmpLabel.setBounds(PARENT.getX() + 5, PARENT.getY() + 30 + i * (12 + 5), PARENT.getWidth(),
 									12);
-							labels[i].setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-							labels[i].setBackground(new Color(0, 0, 0));
-							labels[i].setForeground(UNACTIVE);
-							labels[i].setFocusable(false);
-							labels[i].setVisible(false);
-							RENDER.add(labels[i]);
+							tmpLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+							tmpLabel.setBackground(new Color(0, 0, 0));
+							tmpLabel.setForeground(UNACTIVE);
+							tmpLabel.setFocusable(false);
+							tmpLabel.setVisible(false);
+							labels.add(tmpLabel);
+							i++;
 						}
 						return;
 					}
 				}
 
 				public void hideComponents() {
-					for (int i = 0; i < labels.length; i++)
-						labels[i].setVisible(false);
+					for (int i = 0; i < labels.getLength(); i++)
+						labels.getLabel(i).setVisible(false);
 				}
 
 				public void showComponents() {
+					boolean identical = true;
+					if (TYPE.equals(ItemType.Weapon))
+						try {
+							for (int i = 0; i < labels.getLength(); i++)
+								if (!labels.getLabel(i).getText().equals(INVENTORY.getWeapon(i).name())) {
+									throw new Exception();
+								}
+							if (INVENTORY.getWeapon(labels.getLength()) != null)
+								throw new Exception();
+						} catch (Exception e) {
+							identical = false;
+							int length = 0;
+							while (INVENTORY.getWeapon(length) != null)
+								length++;
+							int tmpLabelsLength = labels.getLength();
+							if (length < tmpLabelsLength) {
+								for (int i = 0; i < tmpLabelsLength - length; i++)
+									labels.removeLabel(0);
+							}
+							if (length > tmpLabelsLength) {
+								Label tmpLabel;
+								for (int i = 0; i < length - tmpLabelsLength; i++) {
+									tmpLabel = new Label("");
+									tmpLabel.setBounds(PARENT.getX() + 5, PARENT.getY() + 30, PARENT.getWidth(), 12);
+									tmpLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+									tmpLabel.setBackground(new Color(0, 0, 0));
+									tmpLabel.setForeground(UNACTIVE);
+									tmpLabel.setFocusable(false);
+									tmpLabel.setVisible(false);
+									RENDER.remove(PARENT);
+									labels.add(tmpLabel);
+									RENDER.add(PARENT);
+								}
+							}
+							for (int i = 0; i < labels.getLength(); i++) {
+								labels.getLabel(i).setText(INVENTORY.getWeapon(i).name());
+								labels.getLabel(i).setBounds(PARENT.getX() + 5, PARENT.getY() + 30 + i * (12 + 5),
+										PARENT.getWidth(), 12);
+							}
+						}
+					if (TYPE.equals(ItemType.Armor))
+						try {
+							for (int i = 0; i < labels.getLength(); i++)
+								if (!labels.getLabel(i).getText().equals(INVENTORY.getArmor(i).getName())) {
+									throw new Exception();
+								}
+							if (INVENTORY.getArmor(labels.getLength()) != null)
+								throw new Exception();
+						} catch (Exception e) {
+							identical = false;
+							int length = 0;
+							while (INVENTORY.getArmor(length) != null)
+								length++;
+							int tmpLabelsLength = labels.getLength();
+							if (length < tmpLabelsLength)
+								for (int i = 0; i < tmpLabelsLength - length; i++)
+									labels.removeLabel(0);
+							if (length > tmpLabelsLength) {
+								Label tmpLabel;
+								for (int i = 0; i < length - tmpLabelsLength; i++) {
+									tmpLabel = new Label("");
+									tmpLabel.setBounds(PARENT.getX() + 5, PARENT.getY() + 30, PARENT.getWidth(), 12);
+									tmpLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+									tmpLabel.setBackground(new Color(0, 0, 0));
+									tmpLabel.setForeground(UNACTIVE);
+									tmpLabel.setFocusable(false);
+									tmpLabel.setVisible(false);
+									RENDER.remove(PARENT);
+									labels.add(tmpLabel);
+									RENDER.add(PARENT);
+								}
+							}
+							for (int i = 0; i < labels.getLength(); i++) {
+								labels.getLabel(i).setText(INVENTORY.getArmor(i).getName());
+								labels.getLabel(i).setBounds(PARENT.getX() + 5, PARENT.getY() + 30 + i * (12 + 5),
+										PARENT.getWidth(), 12);
+							}
+						}
 					currentLabel = 0;
-					for (int i = 0; i < labels.length; i++) {
-						labels[i].setForeground(UNACTIVE);
-						labels[i].setVisible(true);
+					for (int i = 0; i < labels.getLength(); i++) {
+						labels.getLabel(i).setForeground(UNACTIVE);
+						labels.getLabel(i).setVisible(true);
+						if (identical)
+							labels.getLabel(i).setBounds(PARENT.getX() + 5, PARENT.getY() + 30 + i * (12 + 5),
+									PARENT.getWidth(), 12);
 					}
-					labels[currentLabel].setForeground(ACTIVE);
+					if (labels.getLength() > 0)
+						labels.getLabel(0).setForeground(ACTIVE);
 				}
 
 				public void moveUp() {
 					if (currentLabel == 0)
 						return;
-					labels[currentLabel].setForeground(UNACTIVE);
+					labels.getLabel(currentLabel).setForeground(UNACTIVE);
 					currentLabel--;
-					labels[currentLabel].setForeground(ACTIVE);
-					if (labels.length > 30)
+					labels.getLabel(currentLabel).setForeground(ACTIVE);
+					if (labels.getLength() > 30)
 						if (currentLabel > 15 && currentLabel < labels.length - 15)
-							for (int i = 0; i < labels.length; i++)
-								labels[i].setBounds(labels[i].getBounds().x, labels[i].getBounds().y + 17,
-										labels[i].getBounds().width, 12);
+							for (int i = 0; i < labels.getLength(); i++)
+								labels.getLabel(i).setBounds(labels.getLabel(i).getBounds().x,
+										labels.getLabel(i).getBounds().y + 17, labels.getLabel(i).getBounds().width,
+										12);
 					if (NAME.equals("Weapons")) {
 						Weapon tmp = MAIN.getWeapon(getCurrentItem());
 						itemName.setText("Name: " + tmp.name());
@@ -661,16 +769,17 @@ public class Render extends JFrame {
 				}
 
 				public void moveDown() {
-					if (currentLabel == labels.length - 1)
+					if (currentLabel == labels.getLength() - 1 || labels.getLength() < 2)
 						return;
-					labels[currentLabel].setForeground(UNACTIVE);
+					labels.getLabel(currentLabel).setForeground(UNACTIVE);
 					currentLabel++;
-					labels[currentLabel].setForeground(ACTIVE);
-					if (labels.length > 30)
+					labels.getLabel(currentLabel).setForeground(ACTIVE);
+					if (labels.getLength() > 30)
 						if (currentLabel > 15 && currentLabel < labels.length - 15)
-							for (int i = 0; i < labels.length; i++)
-								labels[i].setBounds(labels[i].getBounds().x, labels[i].getBounds().y - 17,
-										labels[i].getBounds().width, 12);
+							for (int i = 0; i < labels.getLength(); i++)
+								labels.getLabel(i).setBounds(labels.getLabel(i).getBounds().x,
+										labels.getLabel(i).getBounds().y - 17, labels.getLabel(i).getBounds().width,
+										12);
 					if (NAME.equals("Weapons")) {
 						Weapon tmp = MAIN.getWeapon(getCurrentItem());
 						itemName.setText("Name: " + tmp.name());
@@ -686,7 +795,7 @@ public class Render extends JFrame {
 				}
 
 				public String getCurrentItem() {
-					return labels[currentLabel].getText();
+					return labels.getLabel(currentLabel) != null ? labels.getLabel(currentLabel).getText() : null;
 				}
 
 				public void setNext(SubPanelElement spe) {
@@ -703,6 +812,111 @@ public class Render extends JFrame {
 
 				public SubPanelElement getPrevious() {
 					return previous;
+				}
+
+				private class LabelList {
+
+					private LabelListElement first, current;
+					private final Render RENDER;
+					private int length;
+
+					public LabelList(Render render) {
+						first = null;
+						current = null;
+						RENDER = render;
+						length = 0;
+					}
+
+					public void add(Label l) {
+						if (first == null) {
+							first = new LabelListElement(l, RENDER);
+							length++;
+							return;
+						}
+						current = first;
+						while (current.getNext() != null) {
+							current = current.getNext();
+						}
+						current.setNext(new LabelListElement(l, RENDER));
+						current.getNext().setPrevious(current);
+						length++;
+					}
+
+					public Label getLabel(int i) {
+						try {
+							current = first;
+							for (int j = 0; j < i; j++)
+								current = current.getNext();
+							return current.getLabel();
+						} catch (Exception e) {
+							return null;
+						}
+					}
+
+					public void removeLabel(int i) {
+						if (i == 0) {
+							first.removeLabel();
+							first = first.getNext();
+							if (first != null)
+								first.setPrevious(null);
+							length--;
+							return;
+						}
+						try {
+							current = first;
+							for (int j = 0; j < i; j++)
+								current = current.getNext();
+						} catch (Exception e) {
+							return;
+						}
+						current.removeLabel();
+						current.getPrevious().setNext(current.getNext());
+						current.getNext().setPrevious(current.getPrevious());
+						length--;
+					}
+
+					public int getLength() {
+						return length;
+					}
+
+					private class LabelListElement {
+
+						private LabelListElement next, previous;
+						private final Label LABEL;
+						private final Render RENDER;
+
+						public LabelListElement(Label l, Render render) {
+							LABEL = l;
+							RENDER = render;
+							RENDER.add(LABEL);
+						}
+
+						public Label getLabel() {
+							return LABEL;
+						}
+
+						public void removeLabel() {
+							RENDER.remove(LABEL);
+						}
+
+						public void setNext(LabelListElement lle) {
+							next = lle;
+						}
+
+						public LabelListElement getNext() {
+							return next;
+						}
+
+						public void setPrevious(LabelListElement lle) {
+							previous = lle;
+						}
+
+						public LabelListElement getPrevious() {
+							return previous;
+						}
+
+					}
+
 				}
 
 			}

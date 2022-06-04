@@ -10,7 +10,7 @@ Armor:
 //Name; DEF; Type
 Empty Armor; 0; Empty
 Leather Armor; 1; Leather
-Iron Armor; 1; Iron
+Iron Armor; 2; Iron
 Enemies:
 //Convention:
 //Name; STR; LP; AG; Weapon; Armor

@@ -18,7 +18,7 @@ public class Main {
 		new Main();
 	}
 
-	private String[] VALID_KEYS = { "w", "a", "s", "d", "i", "j", "k", "l", " " , "e", "\n"};
+	private String[] VALID_KEYS = { "w", "a", "s", "d", "i", "j", "k", "l", " ", "e", "\n" };
 
 	private final Render render;
 	private Fighter player;
@@ -35,10 +35,7 @@ public class Main {
 		readAssets(new File("assets/Dungeon/config.txt"));
 
 		INVENTORY = new Inventory();
-		for (int i = 0; i < 20; i++) {
-			INVENTORY.addWeapon(getWeapon("Wooden Sword"));
-			INVENTORY.addWeapon(getWeapon("Bone Sword"));
-		}
+		INVENTORY.addWeapon(getWeapon("Wooden Sword"));
 		INVENTORY.addArmor(getArmor("Leather Armor"));
 
 		player = new Fighter("X", 1, 10, 1);
@@ -50,7 +47,6 @@ public class Main {
 		render.refreshWeaponLabel();
 		render.println("Welcome to our small game!");
 		dungeon = new Dungeon(this, render);
-
 	}
 
 	/**
@@ -78,19 +74,19 @@ public class Main {
 	}
 
 	public Weapon getWeapon(String name) {
-		for (int i = 0; i < weapons.length; i++) 
+		for (int i = 0; i < weapons.length; i++)
 			if (weapons[i].name().equals(name))
 				return weapons[i];
 		return null;
 	}
-	
+
 	public Armor getArmor(String name) {
 		for (int i = 0; i < armor.length; i++)
 			if (armor[i].getName().equals(name))
 				return armor[i];
 		return null;
 	}
-	
+
 	public Fighter getPlayer() {
 		return player;
 	}

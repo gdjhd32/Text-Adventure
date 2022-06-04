@@ -18,12 +18,20 @@ public class Inventory {
 		return weapons.get(i);
 	}
 
+	public void removeWeapon(int i) {
+		weapons.remove(i);
+	}
+
 	public void addArmor(Armor a) {
 		armors.add(a);
 	}
 
 	public Armor getArmor(int i) {
 		return armors.get(i);
+	}
+
+	public void removeArmor(int i) {
+		armors.remove(i);
 	}
 
 	private class WeaponList {
@@ -76,6 +84,25 @@ public class Inventory {
 			}
 		}
 
+		public void remove(int i) {
+			if (i == 0) {
+				first = first.getNext();
+				if (first != null)
+					first.setPrevious(null);
+				return;
+			}
+			current = first;
+			try {
+				for (int j = 0; j < i; j++) {
+					current = current.getNext();
+				}
+				current.getPrevious().setNext(current.getNext());
+				current.getNext().setPrevious(current.getPrevious());
+			} catch (Exception e) {
+				return;
+			}
+		}
+
 		private class WeaponElement {
 
 			public final Weapon weapon;
@@ -94,11 +121,11 @@ public class Inventory {
 			public WeaponElement getNext() {
 				return next;
 			}
-			
+
 			public void setPrevious(WeaponElement we) {
 				previous = we;
 			}
-			
+
 			public WeaponElement getPrevious() {
 				return previous;
 			}
@@ -156,6 +183,25 @@ public class Inventory {
 			}
 		}
 
+		public void remove(int i) {
+			if (i == 0) {
+				first = first.getNext();
+				if (first != null)
+					first.setPrevious(null);
+				return;
+			}
+			current = first;
+			try {
+				for (int j = 0; j < i; j++) {
+					current = current.getNext();
+				}
+				current.getPrevious().setNext(current.getNext());
+				current.getNext().setPrevious(current.getPrevious());
+			} catch (Exception e) {
+				return;
+			}
+		}
+
 		private class ArmorElement {
 
 			public final Armor armor;
@@ -174,11 +220,11 @@ public class Inventory {
 			public ArmorElement getNext() {
 				return next;
 			}
-			
+
 			public void setPrevious(ArmorElement ae) {
 				previous = ae;
 			}
-			
+
 			public ArmorElement getPrevious() {
 				return previous;
 			}
