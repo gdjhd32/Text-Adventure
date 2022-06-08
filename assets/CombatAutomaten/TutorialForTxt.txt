@@ -29,3 +29,11 @@ _ Initial_Position;
 //
 // There must exist, for every combination of weapons, exactly one CombatAutomat
 // The right addressing of the player and the enemy has to be handled in the AutomatCreator
+
+
+Initial_Position; PW 0 Position_Front You step towards <the Enemy>.; PL 0 P_Rigth_Swing You swing with your sword across the right and ; You face the enemy at medium range.
+Position_Front; PK 2 P_Chest_Stab <add> and stab him in the chest.; PW 1 P_Run_Towards_Enemy <replace> You run towards <the Enemy>; 2.5 You are very close to the enemy
+P_Chest_Stab; 
+P_Run_Towards_Enemy;
+P_Rigth_Swing; 
+

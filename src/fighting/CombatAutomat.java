@@ -52,9 +52,7 @@ public class CombatAutomat {
 		for (int i = 0; i < actions.length; i++) {
 			actions[i].isTimerActive = true;
 		}
-
-//		System.out.println(currentSituation.name + ": " + currentSituation.deathMessage());
-
+		
 		String output = currentSituation.description();
 
 		// damage calculation : (STR * ATK * DMG-multiplier) - enemy DEF; < 0 -> DMG = 0
@@ -92,6 +90,8 @@ public class CombatAutomat {
 		//temporary 
 		for(int i = 0; i < currentSituation.pActions.length; i++) {
 			if(currentSituation.pActions[i].key.equals("_")) {
+				if(currentSituation.pActions[i].nextSituation == null)
+					System.out.println(currentSituation.pActions[i].nextSituationName + " == null");
 				changeSituation(currentSituation.pActions[i].nextSituation);
 				return;
 			}
@@ -200,7 +200,7 @@ public class CombatAutomat {
 						}
 						combatAction.key = "_";
 
-						// has be changed
+						// has to be changed
 						pCombatActions.add(combatAction);
 						eCombatActions.add(combatAction);
 						continue;
@@ -226,11 +226,12 @@ public class CombatAutomat {
 			CombatSituation s = new CombatSituation(description, name, damageMultiplier, isPlayerHit, deathMessage,
 					pCombatActions.toArray(new CombatAction[pCombatActions.size()]),
 					eCombatActions.toArray(new CombatAction[eCombatActions.size()]));
-
 			situations[i] = s;
 
 		}
 
+		// eActions to !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		
 		// uses the name of the next situation in action to find the reference to the
 		// next situation
 		for (int i = 0; i < situations.length; i++) {
@@ -255,7 +256,7 @@ public class CombatAutomat {
 		}
 	}
 
-	private File getAutomatType(Fighter player, Fighter enemy) {
+	private File getAutomatType(Fighter player, Fighter enemy) {		
 		// BroadswordVsBroadsword
 		if (player.getWeapon().type().equals(enemy.getWeapon().type())) {
 			return new File("assets/CombatAutomaten/BroadswordVsBroadsword.txt");
@@ -266,6 +267,7 @@ public class CombatAutomat {
 		return null;
 	}
 
+	// do I need pActions and eActions as separate?
 	private record CombatSituation(String description, String name, double damageMultiplier, boolean isPlayerHit,
 			String deathMessage, CombatAction[] pActions, CombatAction[] eActions) {
 	}
