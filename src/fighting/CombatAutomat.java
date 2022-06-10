@@ -8,6 +8,8 @@ import java.util.Scanner;
 import gui.Render;
 
 public class CombatAutomat {
+	
+	private Timer timer;
 
 	private final Render render;
 	private final Fighter enemy, player;
@@ -31,7 +33,7 @@ public class CombatAutomat {
 	}
 
 	public void keyPressed(String key, boolean isPlayer) {
-		CombatAction[] actions = currentSituation.pActions();
+		CombatAction[] actions = currentSituation.actions();
 
 		for (int i = 0; i < actions.length; i++) {
 			if (actions[i].key == null)
@@ -47,8 +49,11 @@ public class CombatAutomat {
 
 	private void changeSituation(CombatSituation newSituation) {
 		currentSituation = newSituation;
+
+		if(timer != null) 
+			timer.interrupt();
 		
-		CombatAction[] actions = currentSituation.pActions();
+		CombatAction[] actions = currentSituation.actions();
 		for (int i = 0; i < actions.length; i++) {
 			actions[i].isTimerActive = true;
 		}
@@ -74,29 +79,27 @@ public class CombatAutomat {
 
 			if (player.getCurrentHp() <= 0) {
 				player.setCurrentHp(0);
-				output = currentSituation.deathMessage();
+//				output = currentSituation.deathMessage();
+				output = "You died, try again.";
+				render.endFight();
 			} else if (enemy.getCurrentHp() <= 0) {
 				enemy.setCurrentHp(0);
-				output = currentSituation.deathMessage();
+//				output = currentSituation.deathMessage();
+				output = "<the enemy> died, you won!";
+				render.endFight();
+				return;
 			}
 
 			output = output.replaceAll("<DMG>", damage + "");
+			output = output.replaceAll("<the enemy>", enemy.NAME);
 		}
 
 		// output
 		render.println(output);
 		render.refreshStatLabel();
-
-		//temporary 
-		for(int i = 0; i < currentSituation.pActions.length; i++) {
-			if(currentSituation.pActions[i].key.equals("_")) {
-				if(currentSituation.pActions[i].nextSituation == null)
-					System.out.println(currentSituation.pActions[i].nextSituationName + " == null");
-				changeSituation(currentSituation.pActions[i].nextSituation);
-				return;
-			}
-		}
 		
+		timer = new Timer(currentSituation.actions());
+		timer.start();
 	}
 
 	/**
@@ -138,8 +141,7 @@ public class CombatAutomat {
 				i--;
 				continue;
 			}
-			LinkedList<CombatAction> pCombatActions = new LinkedList<CombatAction>();
-			LinkedList<CombatAction> eCombatActions = new LinkedList<CombatAction>();
+			LinkedList<CombatAction> combatActions = new LinkedList<CombatAction>();
 
 			line = l.split(";");
 
@@ -184,11 +186,11 @@ public class CombatAutomat {
 					if (section[0].charAt(0) == '_') {
 
 						combatAction = new CombatAction() {
-//							@Override
-//							public void timerEnd() {
-//								isTimerActive = false;
-//								changeSituation(this.nextSituation);
-//							}
+							@Override
+							public void timerEnd() {
+								isTimerActive = false;
+								changeSituation(this.nextSituation);
+							}
 						};
 
 						if (section.length == 3) {
@@ -201,14 +203,13 @@ public class CombatAutomat {
 						combatAction.key = "_";
 
 						// has to be changed
-						pCombatActions.add(combatAction);
-						eCombatActions.add(combatAction);
+						combatActions.add(combatAction);
 						continue;
 					} else
 						combatAction = new CombatAction() {
-//							public void timerEnd() {
-//								isTimerActive = false;
-//							}
+							public void timerEnd() {
+								isTimerActive = false;
+							}
 						};
 
 					combatAction.key = section[0].substring(1).toLowerCase();
@@ -216,26 +217,24 @@ public class CombatAutomat {
 					combatAction.nextSituationName = section[2];
 
 					if (section[0].charAt(0) == 'P')
-						pCombatActions.add(combatAction);
+						combatAction.isPlayer = true;
 					else
-						eCombatActions.add(combatAction);
+						combatAction.isPlayer = false;
+					combatActions.add(combatAction);
 				}
 
 			}
 
 			CombatSituation s = new CombatSituation(description, name, damageMultiplier, isPlayerHit, deathMessage,
-					pCombatActions.toArray(new CombatAction[pCombatActions.size()]),
-					eCombatActions.toArray(new CombatAction[eCombatActions.size()]));
+					combatActions.toArray(new CombatAction[combatActions.size()]));
 			situations[i] = s;
 
 		}
-
-		// eActions to !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		
 		// uses the name of the next situation in action to find the reference to the
 		// next situation
 		for (int i = 0; i < situations.length; i++) {
-			CombatAction[] actions = situations[i].pActions;
+			CombatAction[] actions = situations[i].actions;
 			for (int o = 0; o < actions.length; o++) {
 				String name = actions[o].nextSituationName;
 				for (int p = 0; p < situations.length; p++) {
@@ -267,13 +266,13 @@ public class CombatAutomat {
 		return null;
 	}
 
-	// do I need pActions and eActions as separate?
 	private record CombatSituation(String description, String name, double damageMultiplier, boolean isPlayerHit,
-			String deathMessage, CombatAction[] pActions, CombatAction[] eActions) {
+			String deathMessage, CombatAction[] actions) {
 	}
 
-	public abstract class CombatAction {
+	private abstract class CombatAction {
 
+		public boolean isPlayer;
 		public String key;
 
 		public boolean isTimerActive = true;
@@ -281,5 +280,92 @@ public class CombatAutomat {
 		public CombatSituation nextSituation;
 
 		private String nextSituationName; // for one time use
+		
+		public abstract void timerEnd();
+		
+		public int timerLength() {
+			return maximumReactionTime;
+		}
 	}
+	
+	private class Timer extends Thread {
+
+		private LinkedList<CombatAction> actions;
+		private CombatAction lastTimer;
+
+		public Timer(CombatAction[] actions) {
+			this.actions = new LinkedList<CombatAction>();
+			for (int i = 0; i < actions.length; i++) {
+				if (actions[i].timerLength() == -1)
+					lastTimer = actions[i];
+				else if (actions[i].timerLength() == 0)
+					continue; // because the timer only marks, if a key cannot be pressed any more, which is
+							  // not the case with infinite timers
+				else
+					this.actions.add(actions[i]);
+			}
+		}
+
+		@SuppressWarnings("static-access")
+		@Override
+		public void run() {
+			try {
+				int sleptTime = 0;
+				while (!actions.isEmpty()) {
+					
+					int enemyWaitTime = (int) (Math.random() * 7 + 0.5) * 1000;
+					
+					CombatAction[] currentTimer = shortestTimer();
+					int timeToSleep = currentTimer[0].timerLength() - sleptTime;
+					
+					if((sleptTime + timeToSleep) < (sleptTime + enemyWaitTime)) {
+						this.sleep(timeToSleep);
+						enemyTurn();
+						sleptTime += enemyWaitTime;
+						timeToSleep = currentTimer[0].timerLength() - sleptTime; // can lead to error
+					} 
+					
+					this.sleep(timeToSleep);
+					sleptTime += timeToSleep;
+					
+					for (int i = 0; i < currentTimer.length; i++) {
+						currentTimer[i].timerEnd();
+					}
+				}
+				if (lastTimer != null)
+					lastTimer.timerEnd();
+
+			} catch (InterruptedException e) {
+				;
+			}
+		}
+		
+		private void enemyTurn() {
+			int current = (int) (Math.random() * (actions.size() - 1));
+			for(int i = 0; i < actions.size(); i++) {
+				if(actions.get(current).isTimerActive && actions.get(current).isPlayer) {
+					keyPressed(actions.get(current).key, false);
+				}
+			}
+		}
+
+		private CombatAction[] shortestTimer() {
+			LinkedList<CombatAction> shortestTimer = new LinkedList<CombatAction>();
+			shortestTimer.add(actions.get(0));
+			for (int i = 0; i < actions.size(); i++) {
+				if (actions.get(i).timerLength() < shortestTimer.get(0).timerLength()) {
+					shortestTimer.clear();
+					shortestTimer.add(actions.get(i));
+				} else if (actions.get(i).timerLength() == shortestTimer.get(0).timerLength())
+					shortestTimer.add(actions.get(i));
+
+			}
+			for (int i = 0; i < shortestTimer.size(); i++) {
+				actions.remove(shortestTimer.get(i));
+			}
+			return shortestTimer.toArray(new CombatAction[shortestTimer.size()]);
+		}
+
+	}
+
 }

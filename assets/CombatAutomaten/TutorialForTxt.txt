@@ -15,7 +15,7 @@ PDMG hand;
 // When, in case the player or enemy dies in that situation, a different death message should be printed,
 // this death message should be added at the end of the DMG statement in angled brackets
 PDMG head <You died from fire.>
-// Times in seconds and for every agility level are 1% more time added to thi
+// Times in seconds and for every agility level are 1% more time added to this
 // To write down informations for the keys:
 PJ 2 P_Hitting_To_The_Head;
 // player/enemy+key timeToPress nameOFNext
@@ -31,9 +31,16 @@ _ Initial_Position;
 // The right addressing of the player and the enemy has to be handled in the AutomatCreator
 
 
-Initial_Position; PW 0 Position_Front You step towards <the Enemy>.; PL 0 P_Rigth_Swing You swing with your sword across the right and ; You face the enemy at medium range.
-Position_Front; PK 2 P_Chest_Stab <add> and stab him in the chest.; PW 1 P_Run_Towards_Enemy <replace> You run towards <the Enemy>; 2.5 You are very close to the enemy
-P_Chest_Stab; 
-P_Run_Towards_Enemy;
-P_Rigth_Swing; 
+Initial_Position
+	PW 0 Position_Front You step towards <the enemy>.
+	PL 0 P_Rigth_Swing You swing with your sword across the right and 
+	You face the enemy at medium range.
+Position_Front
+	PK 2 P_Chest_Stab <add> and stab him in the chest.
+	PW 1 P_Run_Towards_Enemy <replace> You run towards <the Enemy>.
+	2.5 You are very close to the enemy.
+P_Chest_Stab
+P_Run_Towards_Enemy
+P_Rigth_Swing
 
+// keep in mind to ensure, that the spaces are placed correctly.
