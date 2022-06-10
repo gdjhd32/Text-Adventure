@@ -8,6 +8,9 @@ import java.util.Scanner;
 import gui.Render;
 
 public class CombatAutomat {
+	
+	private Timer pTimer;
+	private Timer eTimer;
 
 	private final Render render;
 	private final Fighter enemy, player;
@@ -47,7 +50,7 @@ public class CombatAutomat {
 
 	private void changeSituation(CombatSituation newSituation) {
 		currentSituation = newSituation;
-		
+
 		CombatAction[] actions = currentSituation.pActions();
 		for (int i = 0; i < actions.length; i++) {
 			actions[i].isTimerActive = true;
@@ -74,29 +77,29 @@ public class CombatAutomat {
 
 			if (player.getCurrentHp() <= 0) {
 				player.setCurrentHp(0);
-				output = currentSituation.deathMessage();
+//				output = currentSituation.deathMessage();
+				output = "You died, try again.";
+				render.endFight();
 			} else if (enemy.getCurrentHp() <= 0) {
 				enemy.setCurrentHp(0);
-				output = currentSituation.deathMessage();
+//				output = currentSituation.deathMessage();
+				output = "<the enemy> died, you won!";
+				render.endFight();
 			}
 
 			output = output.replaceAll("<DMG>", damage + "");
+			output = output.replaceAll("<the enemy>", enemy.NAME);
 		}
 
 		// output
 		render.println(output);
 		render.refreshStatLabel();
-
-		//temporary 
-		for(int i = 0; i < currentSituation.pActions.length; i++) {
-			if(currentSituation.pActions[i].key.equals("_")) {
-				if(currentSituation.pActions[i].nextSituation == null)
-					System.out.println(currentSituation.pActions[i].nextSituationName + " == null");
-				changeSituation(currentSituation.pActions[i].nextSituation);
-				return;
-			}
-		}
 		
+		pTimer = new Timer(currentSituation.pActions(), null, true);
+		eTimer = new Timer(currentSituation.eActions(), pTimer, false);
+		pTimer.setOtherTimer(eTimer);
+		pTimer.start();
+		eTimer.start();
 	}
 
 	/**
@@ -184,11 +187,11 @@ public class CombatAutomat {
 					if (section[0].charAt(0) == '_') {
 
 						combatAction = new CombatAction() {
-//							@Override
-//							public void timerEnd() {
-//								isTimerActive = false;
-//								changeSituation(this.nextSituation);
-//							}
+							@Override
+							public void timerEnd() {
+								isTimerActive = false;
+								changeSituation(this.nextSituation);
+							}
 						};
 
 						if (section.length == 3) {
@@ -206,9 +209,9 @@ public class CombatAutomat {
 						continue;
 					} else
 						combatAction = new CombatAction() {
-//							public void timerEnd() {
-//								isTimerActive = false;
-//							}
+							public void timerEnd() {
+								isTimerActive = false;
+							}
 						};
 
 					combatAction.key = section[0].substring(1).toLowerCase();
@@ -272,7 +275,7 @@ public class CombatAutomat {
 			String deathMessage, CombatAction[] pActions, CombatAction[] eActions) {
 	}
 
-	public abstract class CombatAction {
+	public abstract class CombatAction implements TimerObject {
 
 		public String key;
 
@@ -281,5 +284,10 @@ public class CombatAutomat {
 		public CombatSituation nextSituation;
 
 		private String nextSituationName; // for one time use
+		
+		@Override
+		public int timerLength() {
+			return maximumReactionTime;
+		}
 	}
 }
