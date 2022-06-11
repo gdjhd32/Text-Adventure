@@ -57,7 +57,6 @@ public class Dungeon {
 			currentRoom.roomEntered();
 			RENDER.println("You enter another room. \n" + currentRoom.FIRST_DECRIPTION);
 			if (currentRoom.ENEMY != null) {
-				System.out.println(currentRoom.ENEMY);
 				PARENT.initFight(currentRoom.ENEMY);
 			}
 			return;

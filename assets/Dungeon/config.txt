@@ -12,6 +12,7 @@ Leather Armor; 1; Leather
 Iron Armor; 2; Iron
 Enemies:
 //Convention:
-//Name; STR; LP; AG; Weapon; Armor
+//Name; STR; LP; AG; Weapon; Armor; [Drops] (optional)
+//Drops: [ItemName, DropChance & ...]; IMPORTANT: Drop chances have to be in sum less or equal than 100%!!! (checked in the program)
 Empty Enemy; 0; 0; 0; Empty Weapon; Empty Armor
-Tom, the Skeleton Soldier; 2; 10; 2; Bone Sword; Iron Armor
+Tom, the Skeleton Soldier; 2; 10; 2; Bone Sword; Iron Armor; [Iron Armor, 50.01 & Bone Sword, 49.99]

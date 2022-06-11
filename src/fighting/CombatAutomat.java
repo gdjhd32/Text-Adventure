@@ -6,12 +6,14 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 import gui.Render;
+import main.Main;
 
 public class CombatAutomat {
 	
 	private Timer timer;
 
 	private final Render render;
+	private final Main PARENT;
 	private final Fighter enemy, player;
 
 	CombatSituation[] situations;
@@ -19,11 +21,12 @@ public class CombatAutomat {
 
 	private String[] damageMultiplierNames;
 	private double[] damageMultiplier;
-
-	public CombatAutomat(Fighter player, Fighter enemy, Render render) {
+	
+	public CombatAutomat(Fighter player, Fighter enemy, Render render, Main parent) {
 		this.render = render;
 		this.player = player;
 		this.enemy = enemy;
+		PARENT = parent;
 		try {
 			createAutomat(getAutomatType(player, enemy));
 			changeSituation(situations[0]);
@@ -86,7 +89,30 @@ public class CombatAutomat {
 				enemy.setCurrentHp(0);
 //				output = currentSituation.deathMessage();
 				output = "<the enemy> died, you won!";
+				output = output.replaceAll("<the enemy>", enemy.NAME);
+				render.println(output);
 				render.endFight();
+				//has no loot
+				if (enemy.getDropListLength() == 0) {
+					return;
+				}
+				//has loot
+				String[] itemName = new String[enemy.getDropListLength()];
+				int[] dropChance = new int[enemy.getDropListLength()];
+				for (int i = 0; i < itemName.length; i++) {
+					itemName[i] = enemy.getDropName(i);
+					dropChance[i] = enemy.getDropChance(i);
+				}
+				int dropNumber = (int) (10000 * Math.random()) + 1;//<- "number" of the loot in the loot pool
+				int wholeDropNumber = 0;	//used to specify the drop in the "loot pool"
+				for (int i = 0; i < itemName.length; i++) {
+					wholeDropNumber += dropChance[i];
+					if (dropNumber <= wholeDropNumber) {
+						render.println("Oh look! " + enemy.NAME + " dropped something!");
+						PARENT.pickedUpItem(itemName[i]);
+						break;
+					}
+				}
 				return;
 			}
 
