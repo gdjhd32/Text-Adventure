@@ -99,15 +99,17 @@ public class Main {
 				return armor[i];
 		return null;
 	}
+	
+	public Fighter getEnemy(String name) {
+		for (int i = 0; i < enemies.length; i++)
+			if (enemies[i].NAME.equals(name))
+				return enemies[i];
+		return null;
+	}
 
 	public void initFight(String enemy) {
-		for (int i = 0; i < enemies.length; i++) {
-			if (enemy.equals(enemies[i].NAME)) {
-				render.startFight(enemies[i]);
-				fightingField = new CombatAutomat(player, enemies[i], render, this);
-				return;
-			}
-		}
+		render.startFight(getEnemy(enemy));
+		fightingField = new CombatAutomat(player, getEnemy(enemy), render, this);
 	}
 
 	private void readAssets(File file) {
