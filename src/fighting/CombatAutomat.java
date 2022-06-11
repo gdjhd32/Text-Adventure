@@ -311,16 +311,19 @@ public class CombatAutomat {
 		public void run() {
 			try {
 				int sleptTime = 0;
+				System.out.println("New Timer " + actions.isEmpty());
 				while (!actions.isEmpty()) {
 					
-					int enemyWaitTime = (int) (Math.random() * 7 + 0.5) * 1000;
+//					int enemyWaitTime = (int) (Math.random() * 7 + 0.5) * 1000;
+					int enemyWaitTime = 1000;
 					
 					CombatAction[] currentTimer = shortestTimer();
 					int timeToSleep = currentTimer[0].timerLength() - sleptTime;
-					
-					if((sleptTime + timeToSleep) < (sleptTime + enemyWaitTime)) {
+					System.out.println("timeToSleep: " + timeToSleep + ", sleptTime: " + sleptTime + ", enemyWaitTime: " + enemyWaitTime);
+					if((sleptTime + timeToSleep) > enemyWaitTime) {
 						this.sleep(timeToSleep);
 						enemyTurn();
+						System.out.println("enemyTurn");
 						sleptTime += enemyWaitTime;
 						timeToSleep = currentTimer[0].timerLength() - sleptTime; // can lead to error
 					} 
@@ -342,6 +345,7 @@ public class CombatAutomat {
 		
 		private void enemyTurn() {
 			int current = (int) (Math.random() * (actions.size() - 1));
+			System.out.println(actions.size());
 			for(int i = 0; i < actions.size(); i++) {
 				if(actions.get(current).isTimerActive && actions.get(current).isPlayer) {
 					keyPressed(actions.get(current).key, false);

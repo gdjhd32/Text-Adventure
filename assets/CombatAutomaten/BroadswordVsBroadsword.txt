@@ -9,7 +9,7 @@ P_Position_Back; PW 0 Move_Backwards_Front; You stand back.
 Move_Backwards_Front; _ Initial_Position; You move forwards.
 //
 Move_Forward_Ini; _ P_Position_Front; You move forward.
-P_Position_Front; PS 0 Move_Backwards_Front; You are very close to the enemy.
+P_Position_Front; PS 0 Move_Backwards_Front; EL 2 Get_Hit_Hand; You are very close to the enemy.
 Move_Backwards_Front; _ Initial_Position; You move backwards.
 //
 Move_Left_Ini; _ P_Position_Left; You move left.
