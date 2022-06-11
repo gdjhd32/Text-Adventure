@@ -49,6 +49,19 @@ public class Main {
 		dungeon = new Dungeon(this, render);
 	}
 
+	public void pickedUpItem(String itemName) {
+		Weapon weapon = getWeapon(itemName);
+		if (weapon != null) {
+			INVENTORY.addWeapon(weapon);
+			render.println("You have picked up the weapon " + itemName + "!");
+			return;
+		}
+		Armor armor = getArmor(itemName);
+		INVENTORY.addArmor(armor);
+		render.println("You have picked up the armor " + itemName + "!");
+		return;
+	}
+
 	/**
 	 * Only for the player input.
 	 * 
@@ -95,7 +108,7 @@ public class Main {
 		for (int i = 0; i < enemies.length; i++) {
 			if (enemy.equals(enemies[i].NAME)) {
 				render.startFight(enemies[i]);
-				fightingField = new CombatAutomat(player, enemies[i], render);
+				fightingField = new CombatAutomat(player, enemies[i], render, this);
 				return;
 			}
 		}
@@ -221,6 +234,19 @@ public class Main {
 								enemies[index].setArmor(armor[i]);
 								break;
 							}
+					try {
+						String dropList = lineArr[6].substring(1, lineArr[6].length() - 1);
+						String[] drops = dropList.split(" & ");
+						for (int i = 0; i < drops.length; i++) {
+							enemies[index].addDrop(drops[i].split(", ")[0],
+									(int) (Double.parseDouble(drops[i].split(", ")[1]) * 100));
+						}
+					} catch (Exception e) {
+						if (lineArr.length == 7) {
+							System.err.println("Something wrong with the loot of " + enemies[index].NAME
+									+ ". But the program will continue whilst ignoring the error!");
+						}
+					}
 					index++;
 					continue;
 				}
