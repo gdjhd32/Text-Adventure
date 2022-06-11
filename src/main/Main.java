@@ -100,10 +100,6 @@ public class Main {
 		return null;
 	}
 
-	public Fighter getPlayer() {
-		return player;
-	}
-
 	public void initFight(String enemy) {
 		for (int i = 0; i < enemies.length; i++) {
 			if (enemy.equals(enemies[i].NAME)) {
