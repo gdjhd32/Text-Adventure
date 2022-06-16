@@ -41,8 +41,8 @@ public class CombatAutomat {
 		for (int i = 0; i < actions.length; i++) {
 			if (actions[i].key == null)
 				continue;
-			if (actions[i].key.equals(key)) {
-				if (actions[i].isTimerActive)
+			if (actions[i].key.equals(key) && actions[i].isPlayer == isPlayer) {
+				if (actions[i].isTimerActive())
 					changeSituation(actions[i].nextSituation);
 				break;
 			}
@@ -51,15 +51,20 @@ public class CombatAutomat {
 	}
 
 	private void changeSituation(CombatSituation newSituation) {
+		System.out.println("-----------------------------------");
 		currentSituation = newSituation;
+		
+		for(int i = 0; i < currentSituation.actions.length; i++) {
+			currentSituation.actions[i].startTime = System.currentTimeMillis();
+		}
 
 		if(timer != null) 
 			timer.interrupt();
 		
 		CombatAction[] actions = currentSituation.actions();
-		for (int i = 0; i < actions.length; i++) {
-			actions[i].isTimerActive = true;
-		}
+//		for (int i = 0; i < actions.length; i++) {
+//			actions[i].isTimerActive = true;
+//		}
 		
 		String output = currentSituation.description();
 
@@ -84,7 +89,9 @@ public class CombatAutomat {
 				player.setCurrentHp(0);
 //				output = currentSituation.deathMessage();
 				output = "You died, try again.";
+				render.println(output);
 				render.endFight();
+				System.exit(0);
 			} else if (enemy.getCurrentHp() <= 0) {
 				enemy.setCurrentHp(0);
 //				output = currentSituation.deathMessage();
@@ -126,6 +133,7 @@ public class CombatAutomat {
 		
 		timer = new Timer(currentSituation.actions());
 		timer.start();
+		System.out.println("End new Situation");
 	}
 
 	/**
@@ -214,7 +222,6 @@ public class CombatAutomat {
 						combatAction = new CombatAction() {
 							@Override
 							public void timerEnd() {
-								isTimerActive = false;
 								changeSituation(this.nextSituation);
 							}
 						};
@@ -234,7 +241,7 @@ public class CombatAutomat {
 					} else
 						combatAction = new CombatAction() {
 							public void timerEnd() {
-								isTimerActive = false;
+//								isTimerActive = false;
 							}
 						};
 
@@ -301,16 +308,22 @@ public class CombatAutomat {
 		public boolean isPlayer;
 		public String key;
 
-		public boolean isTimerActive = true;
+//		private boolean isTimerActive = true;
 		public int maximumReactionTime;
 		public CombatSituation nextSituation;
+		public long startTime;
 
 		private String nextSituationName; // for one time use
 		
 		public abstract void timerEnd();
 		
-		public int timerLength() {
-			return maximumReactionTime;
+		public boolean isTimerActive() {
+//			System.out.println(key + ": " + maximumReactionTime);
+//			System.out.println(System.currentTimeMillis() - startTime + maximumReactionTime);
+			if(startTime + maximumReactionTime > System.currentTimeMillis() - 20 || maximumReactionTime == 0) // -20 to account for computing
+				return true;
+			else 
+				return false;
 		}
 	}
 	
@@ -322,11 +335,8 @@ public class CombatAutomat {
 		public Timer(CombatAction[] actions) {
 			this.actions = new LinkedList<CombatAction>();
 			for (int i = 0; i < actions.length; i++) {
-				if (actions[i].timerLength() == -1)
+				if (actions[i].maximumReactionTime == -1)
 					lastTimer = actions[i];
-				else if (actions[i].timerLength() == 0)
-					continue; // because the timer only marks, if a key cannot be pressed any more, which is
-							  // not the case with infinite timers
 				else
 					this.actions.add(actions[i]);
 			}
@@ -336,59 +346,76 @@ public class CombatAutomat {
 		@Override
 		public void run() {
 			try {
+//				if(lastTimer != null)
+//					System.out.println(lastTimer.);
+				
 				int sleptTime = 0;
-				System.out.println("New Timer " + actions.isEmpty());
-				while (!actions.isEmpty()) {
 					
-//					int enemyWaitTime = (int) (Math.random() * 7 + 0.5) * 1000;
-					int enemyWaitTime = 1000;
-					
-					CombatAction[] currentTimer = shortestTimer();
-					int timeToSleep = currentTimer[0].timerLength() - sleptTime;
-					System.out.println("timeToSleep: " + timeToSleep + ", sleptTime: " + sleptTime + ", enemyWaitTime: " + enemyWaitTime);
-					if((sleptTime + timeToSleep) > enemyWaitTime) {
-						this.sleep(timeToSleep);
-						enemyTurn();
-						System.out.println("enemyTurn");
-						sleptTime += enemyWaitTime;
-						timeToSleep = currentTimer[0].timerLength() - sleptTime; // can lead to error
-					} 
-					
-					this.sleep(timeToSleep);
-					sleptTime += timeToSleep;
-					
-					for (int i = 0; i < currentTimer.length; i++) {
-						currentTimer[i].timerEnd();
-					}
-				}
-				if (lastTimer != null)
+//				int enemyWaitTime = ((int) (Math.random() * 7 + 0.5) * 100) * 10;
+				int enemyWaitTime = 2000;
+				int lastTimerTime = longestTime();
+				
+				if(lastTimer != null && lastTimerTime < enemyWaitTime) {
+//					System.out.println(lastTimerTime);
+					this.sleep(lastTimerTime);
+					sleptTime = lastTimerTime;
 					lastTimer.timerEnd();
-
+				} 
+				
+				this.sleep(enemyWaitTime - sleptTime);
+				enemyTurn();
+				
 			} catch (InterruptedException e) {
 				;
 			}
 		}
 		
 		private void enemyTurn() {
-			int current = (int) (Math.random() * (actions.size() - 1));
-			System.out.println(actions.size());
+			LinkedList<CombatAction> enemyActionList = new LinkedList<CombatAction>();
 			for(int i = 0; i < actions.size(); i++) {
-				if(actions.get(current).isTimerActive && actions.get(current).isPlayer) {
-					keyPressed(actions.get(current).key, false);
+				if(!actions.get(i).isPlayer)
+					enemyActionList.add(actions.get(i));
+			}
+			double randomNumber = (Math.random() * (enemyActionList.size()));
+			System.out.println("Random number: " + randomNumber);
+			int current = (int) randomNumber; //!!!!!!!!!!!!!!!!!!
+			System.out.println("Current: " + current + " Size: " + enemyActionList.size());
+			for(int i = 0; i < enemyActionList.size(); i++) {
+				if(enemyActionList.get(current).isTimerActive()) {
+					keyPressed(enemyActionList.get(current).key, false);
+					System.out.println("Selected: " + enemyActionList.get(current).key);
+					return;
 				}
+				if(current == actions.size() - 1)
+					current = 0;
+				else 
+					current++;
 			}
 		}
 
+		private int longestTime() {
+			if(actions.isEmpty())
+				return 0;
+			int longestTime = actions.get(0).maximumReactionTime;
+			for(int i = 1; i < actions.size(); i++) {
+				if(longestTime < actions.get(i).maximumReactionTime)
+					longestTime = actions.get(i).maximumReactionTime;
+			}
+			System.out.println("longestTime: " + longestTime);
+			return longestTime;
+		}
+		
 		private CombatAction[] shortestTimer() {
 			LinkedList<CombatAction> shortestTimer = new LinkedList<CombatAction>();
 			shortestTimer.add(actions.get(0));
 			for (int i = 0; i < actions.size(); i++) {
-				if (actions.get(i).timerLength() < shortestTimer.get(0).timerLength()) {
+				if(actions.get(i).maximumReactionTime == 0)
+					continue;
+				if (actions.get(i).maximumReactionTime < shortestTimer.get(0).maximumReactionTime) {
 					shortestTimer.clear();
 					shortestTimer.add(actions.get(i));
-				} else if (actions.get(i).timerLength() == shortestTimer.get(0).timerLength())
+				} else if (actions.get(i).maximumReactionTime == shortestTimer.get(0).maximumReactionTime)
 					shortestTimer.add(actions.get(i));
-
 			}
 			for (int i = 0; i < shortestTimer.size(); i++) {
 				actions.remove(shortestTimer.get(i));
